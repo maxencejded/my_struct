@@ -48,7 +48,7 @@ int			unit_list_singly(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = list_s_push_front(&list, MS_CAST(void *, str[size - i - 1]));
+		ret = list_s_push_front(&list, MS_CAST(void *, str[size - i - 1]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -81,7 +81,7 @@ int			unit_list_singly(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = list_s_push_back(&list, MS_CAST(void *, str[i]));
+		ret = list_s_push_back(&list, MS_CAST(void *, str[i]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -137,7 +137,7 @@ int			unit_list_doubly(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = list_d_push_front(&list, MS_CAST(void *, str[size - i - 1]));
+		ret = list_d_push_front(&list, MS_CAST(void *, str[size - i - 1]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -171,7 +171,7 @@ int			unit_list_doubly(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = list_d_push_back(&list, MS_CAST(void *, str[i]));
+		ret = list_d_push_back(&list, MS_CAST(void *, str[i]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -227,7 +227,7 @@ int			unit_list_circular(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = list_c_push(&list, MS_CAST(void *, str[i]));
+		ret = list_c_push(&list, MS_CAST(void *, str[i]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -298,7 +298,7 @@ int			unit_stack(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = stack_push(stack, MS_CAST(void *, str[i]));
+		ret = stack_push(stack, MS_CAST(void *, str[i]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -348,7 +348,7 @@ int			unit_queue(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = queue_enqueue(queue, MS_CAST(void *, str[i]));
+		ret = queue_enqueue(queue, MS_CAST(void *, str[i]), 0);
 		if (1 == ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 			return (FAILURE);
@@ -409,6 +409,7 @@ int			unit_dictionary(void)
 		ret = dict_insert(
 			  dict
 			, MS_CAST(void *, str[i])
+			, 0
 			, MS_CAST(unsigned char *, str[i])
 			, strlen(str[i])
 			, &hash_fnv_onea
@@ -484,6 +485,7 @@ int			unit_tree(void)
 		ret = tree_push(
 			  &tree
 			, MS_CAST(void *, str[i])
+			, 0
 			, &f_compare_2
 		);
 		if (0 != ret) {

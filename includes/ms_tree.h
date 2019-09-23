@@ -18,19 +18,36 @@ typedef struct			s_tree
  *
  * @param data
  *     (input) data to add to the tree
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  *
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
 static inline
-t_tree		*tree_leef(void *data)
-{
+t_tree		*tree_leef(
+	  void *data
+	, size_t size
+) {
+	void   *copy;
 	t_tree *tree;
 
 	tree = MS_CAST(t_tree *, MS_ALLOC(sizeof(t_tree)));
 	if (MS_ADDRK(tree)) {
 		MS_MEMSET(tree, 0, sizeof(t_tree));
-		tree->data = data;
+		if (0 == size) {
+			tree->data = data;
+		} else {
+			copy = MS_ALLOC(size);
+			if (MS_ADDRK(copy)) {
+				MS_MEMCPY(copy, data, size);
+				tree->data = copy;
+			} else {
+				MS_DEALLOC(tree);
+				return (NULL);
+			}
+		}
 	}
 	return (tree);
 }
@@ -265,7 +282,10 @@ int				tree_fct_post_order(
  *     (input) tree
  * @param data
  *     (input) data to push on the tree
-* @param f_compare
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
+ * @param f_compare
  *     (input) function use to compare two data
  *             @param elem
  *                 (input) elem to compare
@@ -283,6 +303,7 @@ static inline
 int				tree_push(
 	  t_tree **tree
 	, void *data
+	, size_t size
 	, int (*f_compare)(void *elem, void *data)
 ) {
 	int    ret;
@@ -295,25 +316,25 @@ int				tree_push(
 			ret = f_compare((*tree)->data, data);
 			if (ret < 0) {
 				if (MS_ADDRK((*tree)->left)) {
-					return (tree_push(&(*tree)->left, data, f_compare));
+					return (tree_push(&(*tree)->left, data, size, f_compare));
 				} else {
-					(*tree)->left = tree_leef(data);
+					(*tree)->left = tree_leef(data, size);
 					if (MS_ADDRK((*tree)->left)) {
 						return (0);
 					}
 				}
 			} else {
 				if (MS_ADDRK((*tree)->right)) {
-					return (tree_push(&(*tree)->right, data, f_compare));
+					return (tree_push(&(*tree)->right, data, size, f_compare));
 				} else {
-					(*tree)->right = tree_leef(data);
+					(*tree)->right = tree_leef(data, size);
 					if (MS_ADDRK((*tree)->right)) {
 						return (0);
 					}
 				}
 			}
 		} else {
-			*tree = tree_leef(data);
+			*tree = tree_leef(data, size);
 			if (MS_ADDRK(*tree)) {
 				return (0);
 			}

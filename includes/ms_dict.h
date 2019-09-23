@@ -94,6 +94,9 @@ void		dict_free(
  *     (input) dictionary
  * @param data
  *     (input) data to add to the dictionary
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  * @param key
  *     (input) key to use
  * @param key_len
@@ -114,6 +117,7 @@ static inline
 int			dict_insert(
 	  t_dict *dict
 	, void *data
+	, size_t size
 	, unsigned char *key
 	, size_t key_len
 	, size_t (*f_hash)(unsigned char *key, size_t key_len)
@@ -127,7 +131,7 @@ int			dict_insert(
 		&& MS_ADDRK(key)
 		&& MS_ADDRK(f_hash)
 	) {
-		content = content_init(data);
+		content = content_init(data, size);
 		if (MS_ADDRK(content)) {
 			i = f_hash(key, key_len) % dict->size;
 			if (MS_ADDRK(dict->content[i])) {

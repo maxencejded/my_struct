@@ -97,6 +97,9 @@ int			stack_is_empty(t_stack *stack)
  *     (input) stack
  * @param data
  *     (input) data to add to the stack
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  *
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
@@ -105,6 +108,7 @@ static inline
 int			stack_push(
 	  t_stack *stack
 	, void *data
+	, size_t size
 ) {
 	t_content	*content;
 
@@ -112,7 +116,7 @@ int			stack_push(
 		   MS_ADDRK(stack)
 		&& MS_ADDRK(data)
 	) {
-		content = content_init(data);
+		content = content_init(data, size);
 		if (MS_ADDRK(content)) {
 			content->next = stack->content;
 			stack->content = content;

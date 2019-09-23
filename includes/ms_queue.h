@@ -98,6 +98,9 @@ int			queue_is_empty(t_queue *queue)
  *     (input) queue
  * @param data
  *     (input) data to add to the queue
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  *
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
@@ -106,6 +109,7 @@ static inline
 int			queue_enqueue(
 	  t_queue *queue
 	, void *data
+	, size_t size
 ) {
 	t_content	*content;
 
@@ -113,7 +117,7 @@ int			queue_enqueue(
 		   MS_ADDRK(queue)
 		&& MS_ADDRK(data)
 	) {
-		content = content_init(data);
+		content = content_init(data, size);
 		if (MS_ADDRK(content)) {
 			if (MS_ADDRK(queue->last)) {
 				queue->last->next = content;

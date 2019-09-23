@@ -18,19 +18,38 @@ typedef struct			s_list_d
  *
  * @param data
  *     (input) data to add to the list
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  *
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
 static inline
-t_list_d		*list_d_node(void *data)
-{
+t_list_d		*list_d_node(
+	  void *data
+	, size_t size
+) {
+	void     *copy;
 	t_list_d *list;
 
 	list = MS_CAST(t_list_d *, MS_ALLOC(sizeof(t_list_d)));
 	if (MS_ADDRK(list)) {
 		MS_MEMSET(list, 0, sizeof(t_list_d));
-		list->data = data;
+		if (0 == size) {
+			list->data = data;
+		} else {
+			copy = MS_ALLOC(size);
+			if (MS_ADDRK(copy)) {
+				MS_MEMCPY(copy, data, size);
+				list->data = copy;
+			} else {
+				MS_DEALLOC(list);
+				return (NULL);
+			}
+		}
+		list->next = NULL;
+		list->prev = NULL;
 	}
 	return (list);
 }
@@ -165,6 +184,9 @@ int				list_d_fct(
  *     (input) address of the doubly-linked list
  * @param data
  *     (input) data to add to the list
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  *
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
@@ -173,6 +195,7 @@ static inline
 int			list_d_push_front(
 	  t_list_d **list
 	, void *data
+	, size_t size
 ) {
 	t_list_d *node;
 
@@ -180,7 +203,7 @@ int			list_d_push_front(
 		   MS_ADDRK(list)
 		&& MS_ADDRK(data)
 	) {
-		node = list_d_node(data);
+		node = list_d_node(data, size);
 		if (MS_ADDRK(node)) {
 			if (MS_ADDRK(*list)) {
 				(*list)->prev = node;
@@ -201,6 +224,9 @@ int			list_d_push_front(
  *     (input) doubly-linked list
  * @param data
  *     (input) data to add to the list
+ * @param size
+ *     (input) size of the content to allocate.
+ *             If the size is 0, no copy occurs
  *
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
@@ -209,6 +235,7 @@ static inline
 int			list_d_push_back(
 	  t_list_d **list
 	, void *data
+	, size_t size
 ) {
 	t_list_d *tmp;
 	t_list_d *node;
@@ -217,7 +244,7 @@ int			list_d_push_back(
 		   MS_ADDRK(list)
 		&& MS_ADDRK(data)
 	) {
-		node = list_d_node(data);
+		node = list_d_node(data, size);
 		if (MS_ADDRK(node)) {
 			if (MS_ADDRK(*list)) {
 				tmp = *list;
