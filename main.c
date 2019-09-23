@@ -378,6 +378,73 @@ int			unit_queue(void)
 	return (SUCCESS);
 }
 
+static int	f_compare(
+	  void *data
+	, unsigned char *key
+	, size_t key_len
+) {
+	MS_UNUSED(key_len);
+	return (strcmp(MS_CAST(char *, data), MS_CAST(char *, key)));
+}
+
+int			unit_dictionary(void)
+{
+	size_t i;
+	int    ret;
+	char   *tmp;
+	t_dict *dict;
+
+	dict = NULL;
+	ret = dict_init(&dict, size);
+	if (1 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = dict_insert(
+			  dict
+			, MS_CAST(void *, str[i])
+			, MS_CAST(unsigned char *, str[i])
+			, strlen(str[i])
+			, &hash_fnv_onea
+		);
+		if (ret != 0) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, dict_search(
+			  dict
+			, MS_CAST(unsigned char *, str[i])
+			, strlen(str[i])
+			, &hash_fnv_onea
+			, &f_compare
+		));
+		if (MS_NULL(tmp)) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	tmp = MS_CAST(char *, dict_search(
+		  dict
+		, MS_CAST(unsigned char *, "Potato")
+		, strlen("Potato")
+		, &hash_fnv_onea
+		, &f_compare
+	));
+	if (MS_ADDRK(tmp)) {
+		printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
+		return (FAILURE);
+	}
+	dict_free(dict, NULL);
+	return (SUCCESS);
+}
+
 int		main(int argc, char *argv[])
 {
 	(void)argc;
@@ -409,6 +476,12 @@ int		main(int argc, char *argv[])
 	}
 	printf("TEST: Queue: ");
 	if (SUCCESS == unit_queue()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Dictionary: ");
+	if (SUCCESS == unit_dictionary()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");

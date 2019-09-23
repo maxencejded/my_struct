@@ -84,4 +84,16 @@ t_content	*content_init(void *data)
 */
 # include <ms_queue.h>
 
+/*
+ * MS_DICT:
+ *     Dictionary functions
+*/
+# include <ms_dict.h>
+
+/*
+ * MS_HASH:
+ *     Hashing functions
+*/
+# include <ms_hash.h>
+
 #endif
