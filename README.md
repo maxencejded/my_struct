@@ -15,17 +15,17 @@ All the types of datastructre in this repo:
 
 | Type | Access | Search | Insertion | Deletion |
 | ---- | ------ | ------ | --------- | -------- |
-| Singly-linked | `Θ(n)` (`Θ(n)`) | `Θ(n)` (`Θ(n)`) | `Θ(1)` (`Θ(1)`) | `Θ(1)` (`Θ(1)`) |
-| Doubly-linked | `Θ(n)` (`Θ(n)`) | `Θ(n)` (`Θ(n)`) | `Θ(1)` (`Θ(1)`) | `Θ(1)` (`Θ(1)`) |
-| Circular-linked | `Θ(n)` (`Θ(n)`) | `Θ(n)` (`Θ(n)`) | `Θ(1)` (`Θ(1)`) | `Θ(1)` (`Θ(1)`) |
-| Stack | `Θ(n)` (`Θ(n)`) | `Θ(n)` (`Θ(n)`) | `Θ(1)` (`Θ(1)`) | `Θ(1)` (`Θ(1)`) |
-| Queue |  `Θ(n)` (`Θ(n)`) | `Θ(n)` (`Θ(n)`) | `Θ(1)` (`Θ(1)`) | `Θ(1)` (`Θ(1)`) |
+| Singly-linked | `Θ(n)` | `Θ(n)` | `Θ(1)` | `Θ(1)` |
+| Doubly-linked | `Θ(n)` | `Θ(n)` | `Θ(1)` | `Θ(1)` |
+| Circular-linked | `Θ(n)` | `Θ(n)` | `Θ(1)` | `Θ(1)` |
+| Stack | `Θ(n)` | `Θ(n)` | `Θ(1)` | `Θ(1)` |
+| Queue |  `Θ(n)` | `Θ(n)` | `Θ(1)` | `Θ(1)` |
 | Hash Table | `NaN` | `Θ(1)` (`Θ(n)`) | `Θ(1)` (`Θ(n)`) | `Θ(1)` (`Θ(n)`) |
 | Binary Tree | `Θ(log(n))` (`Θ(n)`) | `Θ(log(n))` (`Θ(n)`) | `Θ(log(n))` (`Θ(n)`) | `Θ(log(n))` (`Θ(n)`) |
 
 Legende
 ```
- Avegrage Worst
+ Avegrage Worst (if different)
  Θ(n)     (Θ(n))
 ```
 
