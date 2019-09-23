@@ -208,6 +208,67 @@ int			unit_list_doubly(void)
 	return (SUCCESS);
 }
 
+int			unit_list_circular(void)
+{
+	size_t   i;
+	int      ret;
+	char     *tmp;
+	t_list_c *list;
+
+	list = NULL;
+	ret = list_c_is_empty(list);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = list_c_push(&list, MS_CAST(void *, str[i]));
+		if (1 == ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	if (size != list_c_size(list)) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, list_c_nth_element(&list, i, 0x00));
+		if (0 != strcmp(str[size - i - 1], tmp)) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[size - i - 1]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	if (size != list_c_size(list)) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = list_c_fct(&list, &f_print);
+	if (0 != ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = size;
+	while (i) {
+		tmp = MS_CAST(char *, list_c_nth_element(&list, i, MS_ELEMENT_REMOVE));
+		if (0 != strcmp(str[i - 1], tmp)) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i - 1]);
+			return (FAILURE);
+		}
+		--i;
+	}
+	ret = list_c_is_empty(list);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
 int		main(int argc, char *argv[])
 {
 	(void)argc;
@@ -221,6 +282,12 @@ int		main(int argc, char *argv[])
 	}
 	printf("TEST: Doubly-linked list: ");
 	if (SUCCESS == unit_list_doubly()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Circular Linked list: ");
+	if (SUCCESS == unit_list_circular()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");

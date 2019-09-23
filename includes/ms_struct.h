@@ -38,4 +38,10 @@
 */
 # include <ms_list_doubly_linked.h>
 
+/*
+ * MS_LIST_CIRCULAR_LINKED:
+ *     Circular Linked list fuctions.
+*/
+# include <ms_list_circular_linked.h>
+
 #endif
