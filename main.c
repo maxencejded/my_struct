@@ -319,6 +319,64 @@ int			unit_stack(void)
 	return (SUCCESS);
 }
 
+int			unit_queue(void)
+{
+	size_t  i;
+	int     ret;
+	char    *tmp;
+	t_queue *queue;
+
+	queue = NULL;
+	ret = queue_is_empty(queue);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = queue_init(&queue);
+	if (1 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = queue_is_empty(queue);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = queue_enqueue(queue, MS_CAST(void *, str[i]));
+		if (1 == ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	tmp = MS_CAST(char *, queue_peek(queue));
+	if (0 != strcmp(str[0], tmp)) {
+		printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
+		return (FAILURE);
+	}
+	if (1 == queue_is_empty(queue)) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, queue_dequeue(queue));
+		if (0 != strcmp(str[i], tmp)) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	ret = queue_is_empty(queue);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	queue_free(queue, NULL);
+	return (SUCCESS);
+}
 
 int		main(int argc, char *argv[])
 {
@@ -345,6 +403,12 @@ int		main(int argc, char *argv[])
 	}
 	printf("TEST: Stack: ");
 	if (SUCCESS == unit_stack()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Queue: ");
+	if (SUCCESS == unit_queue()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");

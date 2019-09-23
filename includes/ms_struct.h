@@ -78,4 +78,10 @@ t_content	*content_init(void *data)
 */
 # include <ms_stack.h>
 
+/*
+ * MS_QUEUE:
+ *     Queue fuctions.
+*/
+# include <ms_queue.h>
+
 #endif
