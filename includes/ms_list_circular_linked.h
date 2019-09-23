@@ -63,8 +63,10 @@ void			list_c_free(
 		first = *list;
 		if (MS_ADDRK(*list)) {
 			*list = first->next;
-			while (first != *list)
-			{
+			while (
+				   MS_ADDRK(*list)
+				&& first != *list
+			) {
 				content = *list;
 				*list = (*list)->next;
 				if (MS_ADDRK(f_free)) {
@@ -120,8 +122,10 @@ size_t		list_c_size(t_list_c *list)
 	if (MS_ADDRK(first)) {
 		++size;
 		list = first->next;
-		while (first != list)
-		{
+		while (
+			MS_ADDRK(list)
+			&& first != list
+		) {
 			list = list->next;
 			++size;
 		}
@@ -155,24 +159,26 @@ int				list_c_fct(
 	t_list_c	*content;
 
 	if (
-		MS_ADDRK(list)
+		   MS_ADDRK(list)
+		&& MS_ADDRK(*list)
 		&& MS_ADDRK(f_fct)
 	) {
-		first = *list;
 		if (MS_ADDRK(*list)) {
+			first = *list;
 			ret = f_fct(first->data);
 			if (0 != ret) {
 				return (ret);
 			}
-			*list = first->next;
-			while (first != *list)
-			{
-				content = *list;
-				*list = (*list)->next;
+			content = (*list)->next;;
+			while (
+				   MS_ADDRK(content)
+				&& first != content
+			) {
 				ret = f_fct(content->data);
 				if (0 != ret) {
 					return (ret);
 				}
+				content = content->next;
 			}
 		}
 	}

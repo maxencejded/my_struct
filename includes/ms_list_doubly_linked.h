@@ -56,9 +56,11 @@ void			list_d_free(
 ) {
 	t_list_d *content;
 
-	if (MS_ADDRK(list)) {
-		while (MS_ADDRK(*list))
-		{
+	if (
+		   MS_ADDRK(list)
+		&& MS_ADDRK(*list)
+	) {
+		while (MS_ADDRK(*list)) {
 			content = *list;
 			*list = (*list)->next;
 			if (MS_ADDRK(f_free)) {
@@ -140,16 +142,16 @@ int				list_d_fct(
 
 	if (
 		   MS_ADDRK(list)
+		&& MS_ADDRK(*list)
 		&& MS_ADDRK(f_fct)
 	) {
-		while (MS_ADDRK(*list))
-		{
-			content = *list;
-			*list = (*list)->next;
+		content = *list;
+		while (MS_ADDRK(content)) {
 			ret = f_fct(content->data);
 			if (0 != ret) {
 				return (ret);
 			}
+			content = content->next;
 		}
 	}
 	return (0);

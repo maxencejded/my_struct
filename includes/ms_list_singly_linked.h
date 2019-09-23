@@ -55,7 +55,10 @@ void			list_s_free(
 ) {
 	t_list_s	*content;
 
-	if (MS_ADDRK(list)) {
+	if (
+		   MS_ADDRK(list)
+		&& MS_ADDRK(*list)
+	) {
 		while (MS_ADDRK(*list))
 		{
 			content = *list;
@@ -139,16 +142,16 @@ int				list_s_fct(
 
 	if (
 		   MS_ADDRK(list)
+		&& MS_ADDRK(*list)
 		&& MS_ADDRK(f_fct)
 	) {
-		while (MS_ADDRK(*list))
-		{
-			content = *list;
-			*list = (*list)->next;
+		content = *list;
+		while (MS_ADDRK(content)) {
 			ret = f_fct(content->data);
 			if (0 != ret) {
 				return (ret);
 			}
+			content = content->next;
 		}
 	}
 	return (0);

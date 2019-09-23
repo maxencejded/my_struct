@@ -2,7 +2,7 @@
 #include <strings.h>
 #include <ms_struct.h>
 
-// clang -Wall -Wextra -Werror -g -I includes main.c -o test
+// clang -Wall -Wextra -Werror -g -I includes main.c -o test -DDEBUG
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -23,8 +23,13 @@ const char	*str[] = {
 };
 size_t		size   = (sizeof(str) / sizeof(char *)) - 1;
 
-static int	f_print(void *data) {
+static int	f_print(void *data)
+{
+#ifdef DEBUG
 	printf("%s\n", MS_CAST(char *, data));
+#else
+	MS_UNUSED(data);
+#endif
 	return (0);
 }
 
@@ -50,7 +55,6 @@ int			unit_list_singly(void)
 		}
 		++i;
 	}
-	i = 0;
 	if (size != list_s_size(list)) {
 		printf("\n%s: %d - ", __FILE__, __LINE__);
 		return (FAILURE);
