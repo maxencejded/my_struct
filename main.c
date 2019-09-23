@@ -118,6 +118,96 @@ int			unit_list_singly(void)
 	return (SUCCESS);
 }
 
+int			unit_list_doubly(void)
+{
+	size_t   i;
+	int      ret;
+	char     *tmp;
+	t_list_d *list;
+
+	list = NULL;
+	ret = list_d_is_empty(list);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = list_d_push_front(&list, MS_CAST(void *, str[size - i - 1]));
+		if (1 == ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	i = 0;
+	if (size != list_d_size(list)) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, list_d_nth_element(&list, i, 0x00));
+		if (strcmp(str[i], tmp) != 0) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[size - i - 1]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	ret = list_d_fct(&list, &f_print);
+	if (0 != ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	list_d_free(&list, NULL);
+	ret = list_d_is_empty(list);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = list_d_push_back(&list, MS_CAST(void *, str[i]));
+		if (1 == ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	if (size != list_d_size(list)) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, list_d_nth_element(&list, size - i - 1, 0x00));
+		if (strcmp(str[size - i - 1], tmp) != 0) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[size - i - 1]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	if (size != list_d_size(list)) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, list_d_last_element(&list, MS_ELEMENT_REMOVE));
+		if (strcmp(str[size - i - 1], tmp) != 0) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[size - i - 1]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	ret = list_d_is_empty(list);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
 int		main(int argc, char *argv[])
 {
 	(void)argc;
@@ -125,6 +215,12 @@ int		main(int argc, char *argv[])
 
 	printf("TEST: Singly-linked list: ");
 	if (SUCCESS == unit_list_singly()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Doubly-linked list: ");
+	if (SUCCESS == unit_list_doubly()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");

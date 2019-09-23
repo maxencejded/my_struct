@@ -27,9 +27,15 @@
 # define MS_ELEMENT_REMOVE           MS_CAST(int, 0x01)
 
 /*
- * MS_LIST_SINGLEY_LINKED:
- *     Singley-linked list fuctions.
+ * MS_LIST_SINGLY_LINKED:
+ *     Singly-linked list fuctions.
 */
-# include <ms_list_singley_linked.h>
+# include <ms_list_singly_linked.h>
+
+/*
+ * MS_LIST_DOUBLY_LINKED:
+ *     Doubly-linked list fuctions.
+*/
+# include <ms_list_doubly_linked.h>
 
 #endif
