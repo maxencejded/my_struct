@@ -96,4 +96,10 @@ t_content	*content_init(void *data)
 */
 # include <ms_hash.h>
 
+/*
+ * MS_TREE:
+ *     Tree functions
+*/
+# include <ms_tree.h>
+
 #endif

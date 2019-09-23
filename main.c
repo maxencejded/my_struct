@@ -449,6 +449,72 @@ int			unit_dictionary(void)
 	return (SUCCESS);
 }
 
+static int	f_compare_2(
+	  void *elem
+	, void *data
+) {
+	return (strcmp(MS_CAST(char *, data), MS_CAST(char *, elem)));
+}
+
+static int	f_print_2(void *data, void **content)
+{
+	MS_UNUSED(content);
+#ifdef DEBUG
+	printf("%s\n", MS_CAST(char *, data));
+#else
+	MS_UNUSED(data);
+#endif
+	return (0);
+}
+
+int			unit_tree(void)
+{
+	size_t i;
+	int    ret;
+	t_tree *tree;
+
+	tree = NULL;
+	ret = tree_is_empty(tree);
+	if (0 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = tree_push(
+			  &tree
+			, MS_CAST(void *, str[i])
+			, &f_compare_2
+		);
+		if (0 != ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	ret = tree_fct_in_order(
+		  &tree
+		, NULL
+		, &f_print_2
+	);
+	if (0 != ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = tree_is_empty(tree);
+	if (0 != ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	tree_free(&tree, NULL);
+	ret = tree_is_empty(tree);
+	if (0 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
 int		main(int argc, char *argv[])
 {
 	(void)argc;
@@ -486,6 +552,12 @@ int		main(int argc, char *argv[])
 	}
 	printf("TEST: Dictionary: ");
 	if (SUCCESS == unit_dictionary()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Tree: ");
+	if (SUCCESS == unit_tree()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");
