@@ -26,6 +26,34 @@
 
 # define MS_ELEMENT_REMOVE           MS_CAST(int, 0x01)
 
+typedef struct			s_content
+{
+	void				*data;
+	struct s_content	*next;
+}						t_content;
+
+/*! Content init
+ *
+ * @brief Initialize a content
+ *
+ * @param data
+ *     (input) data to add to the structure
+ *
+ * @result Return a new content.
+*/
+static inline
+t_content	*content_init(void *data)
+{
+	t_content	*content;
+
+	content = MS_CAST(t_content *, MS_ALLOC(sizeof(t_content)));
+	if (MS_ADDRK(content)) {
+		content->data = data;
+		content->next = NULL;
+	}
+	return (content);
+}
+
 /*
  * MS_LIST_SINGLY_LINKED:
  *     Singly-linked list fuctions.
@@ -43,5 +71,11 @@
  *     Circular Linked list fuctions.
 */
 # include <ms_list_circular_linked.h>
+
+/*
+ * MS_STACK:
+ *     Stack fuctions.
+*/
+# include <ms_stack.h>
 
 #endif

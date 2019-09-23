@@ -269,6 +269,57 @@ int			unit_list_circular(void)
 	return (SUCCESS);
 }
 
+int			unit_stack(void)
+{
+	size_t  i;
+	int     ret;
+	char    *tmp;
+	t_stack *stack;
+
+	stack = NULL;
+	ret = stack_is_empty(stack);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = stack_init(&stack);
+	if (1 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = stack_is_empty(stack);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	while (i < size) {
+		ret = stack_push(stack, MS_CAST(void *, str[i]));
+		if (1 == ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	i = 0;
+	while (i < size) {
+		tmp = MS_CAST(char *, stack_pop(stack));
+		if (strcmp(str[size - i - 1], tmp) != 0) {
+			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[size - i - 1]);
+			return (FAILURE);
+		}
+		++i;
+	}
+	ret = stack_is_empty(stack);
+	if (0 == ret) {
+		printf("\n%s: %d - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	stack_free(stack, NULL);
+	return (SUCCESS);
+}
+
+
 int		main(int argc, char *argv[])
 {
 	(void)argc;
@@ -288,6 +339,12 @@ int		main(int argc, char *argv[])
 	}
 	printf("TEST: Circular Linked list: ");
 	if (SUCCESS == unit_list_circular()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Stack: ");
+	if (SUCCESS == unit_stack()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");
