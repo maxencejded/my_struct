@@ -96,7 +96,7 @@ void			tree_free(
  *         Otherwise, a 0 is returned.
 */
 static inline
-int			tree_is_empty(t_tree *tree)
+int			tree_is_empty(const t_tree *tree)
 {
 	if (MS_ADDRK(tree)) {
 		if (MS_ADDRK(tree->data)) {

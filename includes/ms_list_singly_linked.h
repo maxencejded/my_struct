@@ -101,7 +101,7 @@ void			list_s_free(
  *         Otherwise, a 0 is returned.
 */
 static inline
-int			list_s_is_empty(t_list_s *list)
+int			list_s_is_empty(const t_list_s *list)
 {
 	if (MS_ADDRK(list)) {
 		if (MS_ADDRK(list->data)) {
@@ -109,29 +109,6 @@ int			list_s_is_empty(t_list_s *list)
 		}
 	}
 	return (1);
-}
-
-/*! Singly-linked List size
- *
- * @brief Count the number of elements in the list
- *
- * @param list
- *     (input) singly-linked list
- *
- * @result If successful, the size is returned.
- *         Otherwise, a 0 is returned.
-*/
-static inline
-size_t		list_s_size(t_list_s *list)
-{
-	size_t		size;
-
-	size = 0;
-	while (MS_ADDRK(list)) {
-		list = list->next;
-		++size;
-	}
-	return (size);
 }
 
 /*! Singly-linked List function

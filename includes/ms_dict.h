@@ -24,8 +24,10 @@ typedef struct			s_dict
  *         Otherwise, a 1 is returned.
 */
 static inline
-int		dict_init(t_dict **dict, size_t size)
-{
+int		dict_init(
+	  t_dict **dict
+	, size_t size
+) {
 	size_t	content_size;
 
 	if (MS_ADDRK(dict)) {

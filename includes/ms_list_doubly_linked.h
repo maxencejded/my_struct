@@ -102,7 +102,7 @@ void			list_d_free(
  *         Otherwise, a 0 is returned.
 */
 static inline
-int			list_d_is_empty(t_list_d *list)
+int			list_d_is_empty(const t_list_d *list)
 {
 	if (MS_ADDRK(list)) {
 		if (MS_ADDRK(list->data)) {
@@ -110,29 +110,6 @@ int			list_d_is_empty(t_list_d *list)
 		}
 	}
 	return (1);
-}
-
-/*! Doubly-linked List size
- *
- * @brief Count the number of elements in the list
- *
- * @param list
- *     (input) doubly-linked list
- *
- * @result If successful, the size is returned.
- *         Otherwise, a 0 is returned.
-*/
-static inline
-size_t		list_d_size(t_list_d *list)
-{
-	size_t		size;
-
-	size = 0;
-	while (MS_ADDRK(list)) {
-		list = list->next;
-		++size;
-	}
-	return (size);
 }
 
 /*! Doubly-linked List function

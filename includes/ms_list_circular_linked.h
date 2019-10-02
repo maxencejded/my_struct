@@ -108,7 +108,7 @@ void			list_c_free(
  *         Otherwise, a 0 is returned.
 */
 static inline
-int			list_c_is_empty(t_list_c *list)
+int			list_c_is_empty(const t_list_c *list)
 {
 	if (MS_ADDRK(list)) {
 		if (MS_ADDRK(list->data)) {
@@ -116,38 +116,6 @@ int			list_c_is_empty(t_list_c *list)
 		}
 	}
 	return (1);
-}
-
-/*! Circular Linked List size
- *
- * @brief Count the number of elements in the list
- *
- * @param list
- *     (input) circular linked list
- *
- * @result If successful, the size is returned.
- *         Otherwise, a 0 is returned.
-*/
-static inline
-size_t		list_c_size(t_list_c *list)
-{
-	size_t		size;
-	t_list_c	*first;
-
-	size = 0;
-	first = list;
-	if (MS_ADDRK(first)) {
-		++size;
-		list = first->next;
-		while (
-			MS_ADDRK(list)
-			&& first != list
-		) {
-			list = list->next;
-			++size;
-		}
-	}
-	return (size);
 }
 
 /*! Circular Linked List function

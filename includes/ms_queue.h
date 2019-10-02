@@ -80,7 +80,7 @@ void		queue_free(
  *         Otherwise, a 0 is returned.
 */
 static inline
-int			queue_is_empty(t_queue *queue)
+int			queue_is_empty(const t_queue *queue)
 {
 	if (MS_ADDRK(queue)) {
 		if (MS_ADDRK(queue->first)) {

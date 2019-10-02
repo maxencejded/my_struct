@@ -79,7 +79,7 @@ void		stack_free(
  *         Otherwise, a 0 is returned.
 */
 static inline
-int			stack_is_empty(t_stack *stack)
+int			stack_is_empty(const t_stack *stack)
 {
 	if (MS_ADDRK(stack)) {
 		if (MS_ADDRK(stack->content)) {
