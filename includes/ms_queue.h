@@ -3,13 +3,20 @@
 
 # ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
+# endif /* !MS_STRUCT_H */
 
-typedef struct			s_queue
-{
-	t_content			*first;
-	t_content			*last;
-}						t_queue;
+#ifndef MS_CONTENT_H
+#include <ms_content.h>
+# endif /* !MS_CONTENT_H */
+
+/*----------------------------------- STRUCTURES ------------------------------------*/
+
+struct s_queue;
+
+/* Type opaque */
+typedef struct s_queue t_queue;
+
+/*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
 /*! Queue init
  *
@@ -21,18 +28,7 @@ typedef struct			s_queue
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			queue_init(t_queue **queue)
-{
-	if (MS_ADDRK(queue)) {
-		*queue = MS_CAST(t_queue *, MS_ALLOC(sizeof(t_queue)));
-		if (MS_ADDRK(*queue)) {
-			MS_MEMSET(*queue, 0, sizeof(t_queue));
-			return (0);
-		}
-	}
-	return (1);
-}
+int queue_init(t_queue ** queue);
 
 /*! Queue free
  *
@@ -48,26 +44,12 @@ int			queue_init(t_queue **queue)
  *
  * @result NaN
 */
-static inline
-void		queue_free(
-	  t_queue *queue
-	, void (*f_free)(void *data)
-) {
-	t_content	*content;
+void queue_free(
+	  t_queue * queue
+	, void (*f_free)(void * data)
+);
 
-	if (MS_ADDRK(queue)) {
-		while (MS_ADDRK(queue->first))
-		{
-			content = queue->first;
-			queue->first = queue->first->next;
-			if (MS_ADDRK(f_free)) {
-				f_free(content->data);
-			}
-			MS_DEALLOC(content);
-		}		
-		MS_DEALLOC(queue);
-	}
-}
+/*------------------------------------- METHODS -------------------------------------*/
 
 /*! Queue is empty
  *
@@ -79,16 +61,7 @@ void		queue_free(
  * @result If successful, 1 is returned.
  *         Otherwise, a 0 is returned.
 */
-static inline
-int			queue_is_empty(const t_queue *queue)
-{
-	if (MS_ADDRK(queue)) {
-		if (MS_ADDRK(queue->first)) {
-			return (0);
-		}
-	}
-	return (1);
-}
+int queue_is_empty(const t_queue * queue);
 
 /*! Queue enqueue
  *
@@ -105,31 +78,11 @@ int			queue_is_empty(const t_queue *queue)
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			queue_enqueue(
-	  t_queue *queue
-	, void *data
+int queue_enqueue(
+	  t_queue * queue
+	, void * data
 	, size_t size
-) {
-	t_content	*content;
-
-	if (
-		   MS_ADDRK(queue)
-		&& MS_ADDRK(data)
-	) {
-		content = content_init(data, size);
-		if (MS_ADDRK(content)) {
-			if (MS_ADDRK(queue->last)) {
-				queue->last->next = content;
-			} else {
-				queue->first = content;
-			}
-			queue->last = content;
-			return (0);
-		}
-	}
-	return (1);
-}
+);
 
 /*! Queue dequeue
  *
@@ -142,25 +95,7 @@ int			queue_enqueue(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void		*queue_dequeue(t_queue *queue)
-{
-	void		*data;
-	t_content	*content;
-
-	if (MS_ADDRK(queue)) {
-		content = queue->first;
-		if (MS_ADDRK(content)) {
-			queue->first = queue->first->next;
-			if (content == queue->last) {
-				queue->last = NULL;
-			}
-			data = content->data;
-			MS_DEALLOC(content);
-			return (data);
-		}
-	}
-	return (NULL);
-}
+void *queue_dequeue(t_queue * queue);
 
 /*! Queue peek
  *
@@ -172,14 +107,8 @@ void		*queue_dequeue(t_queue *queue)
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void		*queue_peek(t_queue *queue)
-{
-	if (MS_ADDRK(queue)) {
-		if (MS_ADDRK(queue->first)) {
-			return (queue->first->data);
-		}
-	}
-	return (NULL);
-}
+void *queue_peek(t_queue * queue);
 
-#endif
+#endif /* !MS_QUEUE_H */
+
+/* EOF */

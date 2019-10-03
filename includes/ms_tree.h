@@ -3,14 +3,16 @@
 
 # ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
+# endif /* !MS_STRUCT_H */
 
-typedef struct			s_tree
-{
-	void				*data;
-	struct s_tree		*left;
-	struct s_tree		*right;
-}						t_tree;
+/*----------------------------------- STRUCTURES ------------------------------------*/
+
+struct s_tree;
+
+/* Type opaque */
+typedef struct s_tree t_tree;
+
+/*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
 /*! Tree node init
  *
@@ -25,32 +27,10 @@ typedef struct			s_tree
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-t_tree		*tree_leef(
-	  void *data
+t_tree *tree_leef(
+	  void * data
 	, size_t size
-) {
-	void   *copy;
-	t_tree *tree;
-
-	tree = MS_CAST(t_tree *, MS_ALLOC(sizeof(t_tree)));
-	if (MS_ADDRK(tree)) {
-		MS_MEMSET(tree, 0, sizeof(t_tree));
-		if (0 == size) {
-			tree->data = data;
-		} else {
-			copy = MS_ALLOC(size);
-			if (MS_ADDRK(copy)) {
-				MS_MEMCPY(copy, data, size);
-				tree->data = copy;
-			} else {
-				MS_DEALLOC(tree);
-				return (NULL);
-			}
-		}
-	}
-	return (tree);
-}
+);
 
 /*! Tree free
  *
@@ -66,24 +46,12 @@ t_tree		*tree_leef(
  *
  * @result NaN.
 */
-static inline
-void			tree_free(
-	  t_tree **tree
-	, void (*f_free)(void *data)
-) {
-	if (
-		   MS_ADDRK(tree)
-		&& MS_ADDRK(*tree)
-	) {
-		tree_free(&(*tree)->left, f_free);
-		tree_free(&(*tree)->right, f_free);
-		if (MS_ADDRK(f_free)) {
-			f_free((*tree)->data);
-		}
-		MS_DEALLOC(*tree);
-		*tree = NULL;
-	}
-}
+void tree_free(
+	  t_tree ** tree
+	, void (*f_free)(void * data)
+);
+
+/*------------------------------------- METHODS -------------------------------------*/
 
 /*! Tree is empty
  *
@@ -95,16 +63,7 @@ void			tree_free(
  * @result If successful, 1 is returned.
  *         Otherwise, a 0 is returned.
 */
-static inline
-int			tree_is_empty(const t_tree *tree)
-{
-	if (MS_ADDRK(tree)) {
-		if (MS_ADDRK(tree->data)) {
-			return (0);
-		}
-	}
-	return (1);
-}
+int tree_is_empty(const t_tree * tree);
 
 /*! Tree function (pre-order)
  *
@@ -126,27 +85,11 @@ int			tree_is_empty(const t_tree *tree)
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				tree_fct_pre_order(
-	  t_tree **tree
-	, void **content
-	, int (*f_fct)(void *data, void **content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRK(tree)
-		&& MS_ADDRK(f_fct)
-		&& MS_ADDRK(*tree)
-	) {
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
-			return (ret);
-		tree_fct_pre_order(&(*tree)->left, content, f_fct);
-		tree_fct_pre_order(&(*tree)->right, content, f_fct);
-	}
-	return (0);
-}
+int tree_fct_pre_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+);
 
 /*! Tree function (in-order)
  *
@@ -168,27 +111,11 @@ int				tree_fct_pre_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				tree_fct_in_order(
-	  t_tree **tree
-	, void **content
-	, int (*f_fct)(void *data, void **content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRK(tree)
-		&& MS_ADDRK(f_fct)
-		&& MS_ADDRK(*tree)
-	) {
-		tree_fct_in_order(&(*tree)->left, content, f_fct);
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
-			return (ret);
-		tree_fct_in_order(&(*tree)->right, content, f_fct);
-	}
-	return (0);
-}
+int tree_fct_in_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+);
 
 /*! Tree function (out-order)
  *
@@ -210,27 +137,11 @@ int				tree_fct_in_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				tree_fct_out_order(
-	  t_tree **tree
-	, void **content
-	, int (*f_fct)(void *data, void **content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRK(tree)
-		&& MS_ADDRK(f_fct)
-		&& MS_ADDRK(*tree)
-	) {
-		tree_fct_out_order(&(*tree)->right, content, f_fct);
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
-			return (ret);
-		tree_fct_out_order(&(*tree)->left, content, f_fct);
-	}
-	return (0);
-}
+int tree_fct_out_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+);
 
 /*! Tree function (post-order)
  *
@@ -252,27 +163,11 @@ int				tree_fct_out_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				tree_fct_post_order(
-	  t_tree **tree
-	, void **content
-	, int (*f_fct)(void *data, void **content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRK(tree)
-		&& MS_ADDRK(f_fct)
-		&& MS_ADDRK(*tree)
-	) {
-		tree_fct_post_order(&(*tree)->left, content, f_fct);
-		tree_fct_post_order(&(*tree)->right, content, f_fct);
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
-			return (ret);
-	}
-	return (0);
-}
+int tree_fct_post_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+);
 
 /*! Tree push
  *
@@ -299,48 +194,13 @@ int				tree_fct_post_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				tree_push(
-	  t_tree **tree
-	, void *data
+int tree_push(
+	  t_tree ** tree
+	, void * data
 	, size_t size
-	, int (*f_compare)(void *elem, void *data)
-) {
-	int    ret;
+	, int (*f_compare)(void * elem, void * data)
+);
 
-	if (
-		   MS_ADDRK(tree)
-		&& MS_ADDRK(f_compare)
-	) {
-		if (MS_ADDRK(*tree)) {
-			ret = f_compare((*tree)->data, data);
-			if (ret < 0) {
-				if (MS_ADDRK((*tree)->left)) {
-					return (tree_push(&(*tree)->left, data, size, f_compare));
-				} else {
-					(*tree)->left = tree_leef(data, size);
-					if (MS_ADDRK((*tree)->left)) {
-						return (0);
-					}
-				}
-			} else {
-				if (MS_ADDRK((*tree)->right)) {
-					return (tree_push(&(*tree)->right, data, size, f_compare));
-				} else {
-					(*tree)->right = tree_leef(data, size);
-					if (MS_ADDRK((*tree)->right)) {
-						return (0);
-					}
-				}
-			}
-		} else {
-			*tree = tree_leef(data, size);
-			if (MS_ADDRK(*tree)) {
-				return (0);
-			}
-		}
-	}
-	return (1);
-}
+#endif /* !MS_TREE_H */
 
-#endif
+/* EOF */

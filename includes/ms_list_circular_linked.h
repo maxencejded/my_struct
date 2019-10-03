@@ -3,14 +3,16 @@
 
 # ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
+# endif /* !MS_STRUCT_H */
 
-typedef struct			s_list_c
-{
-	void				*data;
-	struct s_list_c		*prev;
-	struct s_list_c		*next;
-}						t_list_c;
+/*----------------------------------- STRUCTURES ------------------------------------*/
+
+struct s_list_c;
+
+/* Type opaque */
+typedef struct s_list_c t_list_c;
+
+/*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
 /*! Circular Linked List node init
  *
@@ -25,34 +27,10 @@ typedef struct			s_list_c
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-t_list_c		*list_c_node(
-	  void *data
-	, size_t size)
-{
-	void     *copy;
-	t_list_c *list;
-
-	list = MS_CAST(t_list_c *, MS_ALLOC(sizeof(t_list_c)));
-	if (MS_ADDRK(list)) {
-		MS_MEMSET(list, 0, sizeof(t_list_c));
-		if (0 == size) {
-			list->data = data;
-		} else {
-			copy = MS_ALLOC(size);
-			if (MS_ADDRK(copy)) {
-				MS_MEMCPY(copy, data, size);
-				list->data = copy;
-			} else {
-				MS_DEALLOC(list);
-				return (NULL);
-			}
-		}
-		list->next = NULL;
-		list->prev = NULL;
-	}
-	return (list);
-}
+t_list_c *list_c_node(
+	  void * data
+	, size_t size
+);
 
 /*! Circular Linked List free
  *
@@ -68,34 +46,12 @@ t_list_c		*list_c_node(
  *
  * @result NaN.
 */
-static inline
-void			list_c_free(
-	  t_list_c **list
-	, void (*f_free)(void *data)
-) {
-	t_list_c	*first;
-	t_list_c	*content;
+void list_c_free(
+	  t_list_c ** list
+	, void (*f_free)(void * data)
+);
 
-	if (MS_ADDRK(list)) {
-		first = *list;
-		if (MS_ADDRK(*list)) {
-			*list = first->next;
-			while (
-				   MS_ADDRK(*list)
-				&& first != *list
-			) {
-				content = *list;
-				*list = (*list)->next;
-				if (MS_ADDRK(f_free)) {
-					f_free(content->data);
-				}
-				MS_DEALLOC(content);
-			}
-		}
-		MS_DEALLOC(first);
-		*list = NULL;
-	}
-}
+/*------------------------------------- METHODS -------------------------------------*/
 
 /*! Circular Linked is empty
  *
@@ -107,16 +63,7 @@ void			list_c_free(
  * @result If successful, 1 is returned.
  *         Otherwise, a 0 is returned.
 */
-static inline
-int			list_c_is_empty(const t_list_c *list)
-{
-	if (MS_ADDRK(list)) {
-		if (MS_ADDRK(list->data)) {
-			return (0);
-		}
-	}
-	return (1);
-}
+int list_c_is_empty(const t_list_c * list);
 
 /*! Circular Linked List function
  *
@@ -134,41 +81,10 @@ int			list_c_is_empty(const t_list_c *list)
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				list_c_fct(
-	  t_list_c **list
-	, int (*f_fct)(void *data)
-) {
-	int         ret;
-	t_list_c	*first;
-	t_list_c	*content;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-		&& MS_ADDRK(f_fct)
-	) {
-		if (MS_ADDRK(*list)) {
-			first = *list;
-			ret = f_fct(first->data);
-			if (0 != ret) {
-				return (ret);
-			}
-			content = (*list)->next;;
-			while (
-				   MS_ADDRK(content)
-				&& first != content
-			) {
-				ret = f_fct(content->data);
-				if (0 != ret) {
-					return (ret);
-				}
-				content = content->next;
-			}
-		}
-	}
-	return (0);
-}
+int list_c_fct(
+	  t_list_c ** list
+	, int (*f_fct)(void * data)
+);
 
 /*! Circular Linked List push
  *
@@ -185,39 +101,11 @@ int				list_c_fct(
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			list_c_push(
-	  t_list_c **list
-	, void *data
+int list_c_push(
+	  t_list_c ** list
+	, void * data
 	, size_t size
-) {
-	t_list_c	*node;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(data)
-	) {
-		node = list_c_node(data, size);
-		if (MS_ADDRK(node)) {
-			if (MS_ADDRK(*list)) {
-				if (NULL == (*list)->next) {
-					node->next = *list;
-					node->prev = *list;
-					(*list)->next = node;
-					(*list)->prev = node;
-				} else {
-					node->next = *list;
-					node->prev = (*list)->prev;
-					(*list)->prev = node;
-					node->prev->next = node;
-				}
-			}
-			*list = node;
-			return (0);
-		}
-	}
-	return (1);
-}
+);
 
 /*! Circular Linked List first element
  *
@@ -231,34 +119,10 @@ int			list_c_push(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-void		*list_c_element(
-	  t_list_c **list
+void *list_c_element(
+	  t_list_c ** list
 	, int flag
-) {
-	void		*data;
-	t_list_c	*node;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-	) {
-		node = *list;
-		data = node->data;
-		if (MS_ELEMENT_REMOVE & flag) {
-			*list = node->next;
-			if (node == *list) {
-				*list = NULL;
-			} else {
-				(*list)->prev = node->prev;
-				(*list)->prev->next = *list;
-			}
-			MS_DEALLOC(node);
-		}
-		return (data);
-	}
-	return (NULL);
-}
+);
 
 /*! Circular Linked List n-th element
  *
@@ -276,46 +140,12 @@ void		*list_c_element(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-void		*list_c_nth_element(
-	  t_list_c **list
+void *list_c_nth_element(
+	  t_list_c ** list
 	, size_t n
 	, int flag
-) {
-	void		*data;
-	t_list_c	*tmp;
-	t_list_c	*node;
+);
 
-	if (0 == n)
-		return (list_c_element(list, flag));
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-	) {
-		node = *list;
-		while (MS_ADDRK(node->next) && n) {
-			if (1 == n) {
-				data = node->next->data;
-				if (MS_ELEMENT_REMOVE & flag) {
-					tmp = node->next;
-					node->next = tmp->next;
-					tmp->next->prev = node;
-					if (tmp == *list) {
-						if (tmp->next == *list) {
-							*list = NULL;
-						} else {
-							*list = node->next;
-						}
-					}
-					MS_DEALLOC(tmp);
-				}
-				return (data);
-			}
-			node = node->next;
-			--n;
-		}
-	}
-	return (NULL);
-}
+#endif /* !MS_LIST_CIRCULAR_H */
 
-#endif
+/* EOF */

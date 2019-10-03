@@ -3,12 +3,20 @@
 
 # ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
+# endif /* !MS_STRUCT_H */
 
-typedef struct			s_stack
-{
-	t_content			*content;
-}						t_stack;
+#ifndef MS_CONTENT_H
+#include <ms_content.h>
+# endif /* !MS_CONTENT_H */
+
+/*----------------------------------- STRUCTURES ------------------------------------*/
+
+struct s_stack;
+
+/* Type opaque */
+typedef struct s_stack t_stack;
+
+/*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
 /*! Stack init
  *
@@ -20,18 +28,7 @@ typedef struct			s_stack
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			stack_init(t_stack **stack)
-{
-	if (MS_ADDRK(stack)) {
-		*stack = MS_CAST(t_stack *, MS_ALLOC(sizeof(t_stack)));
-		if (MS_ADDRK(*stack)) {
-			MS_MEMSET(*stack, 0, sizeof(t_stack));
-			return (0);
-		}
-	}
-	return (1);
-}
+int stack_init(t_stack ** stack);
 
 /*! Stack free
  *
@@ -47,26 +44,12 @@ int			stack_init(t_stack **stack)
  *
  * @result NaN.
 */
-static inline
-void		stack_free(
-	  t_stack *stack
-	, void (*f_free)(void *data)
-) {
-	t_content	*content;
+void stack_free(
+	  t_stack * stack
+	, void (*f_free)(void * data)
+);
 
-	if (MS_ADDRK(stack)) {
-		while (MS_ADDRK(stack->content))
-		{
-			content = stack->content;
-			stack->content = stack->content->next;
-			if (MS_ADDRK(f_free)) {
-				f_free(content->data);
-			}
-			MS_DEALLOC(content);
-		}		
-		MS_DEALLOC(stack);
-	}
-}
+/*------------------------------------- METHODS -------------------------------------*/
 
 /*! Stack is empty
  *
@@ -78,16 +61,7 @@ void		stack_free(
  * @result If successful, 1 is returned.
  *         Otherwise, a 0 is returned.
 */
-static inline
-int			stack_is_empty(const t_stack *stack)
-{
-	if (MS_ADDRK(stack)) {
-		if (MS_ADDRK(stack->content)) {
-			return (0);
-		}
-	}
-	return (1);
-}
+int stack_is_empty(const t_stack * stack);
 
 /*! Stack push
  *
@@ -104,27 +78,11 @@ int			stack_is_empty(const t_stack *stack)
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			stack_push(
-	  t_stack *stack
-	, void *data
+int stack_push(
+	  t_stack * stack
+	, void * data
 	, size_t size
-) {
-	t_content	*content;
-
-	if (
-		   MS_ADDRK(stack)
-		&& MS_ADDRK(data)
-	) {
-		content = content_init(data, size);
-		if (MS_ADDRK(content)) {
-			content->next = stack->content;
-			stack->content = content;
-			return (0);
-		}
-	}
-	return (1);
-}
+);
 
 /*! Stack pop
  *
@@ -137,21 +95,8 @@ int			stack_push(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void		*stack_pop(t_stack *stack)
-{
-	void		*data;
-	t_content	*content;
+void *stack_pop(t_stack * stack);
 
-	if (MS_ADDRK(stack)) {
-		content = stack->content;
-		if (MS_ADDRK(content)) {
-			stack->content = content->next;
-			data = content->data;
-			MS_DEALLOC(content);
-			return (data);
-		}
-	}
-	return (NULL);
-}
+#endif /* !MS_STACK_H */
 
-#endif
+/* EOF */

@@ -3,13 +3,20 @@
 
 # ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
+# endif /* !MS_STRUCT_H */
 
-typedef struct			s_dict
-{
-	size_t				size;
-	t_content			**content;
-}						t_dict;
+#ifndef MS_CONTENT_H
+#include <ms_content.h>
+# endif /* !MS_CONTENT_H */
+
+/*----------------------------------- STRUCTURES ------------------------------------*/
+
+struct s_dict;
+
+/* Type opaque */
+typedef struct s_dict t_dict;
+
+/*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
 /*! Dictionary init
  *
@@ -23,30 +30,10 @@ typedef struct			s_dict
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int		dict_init(
-	  t_dict **dict
+int dict_init(
+	  t_dict ** dict
 	, size_t size
-) {
-	size_t	content_size;
-
-	if (MS_ADDRK(dict)) {
-		*dict = MS_CAST(t_dict *, MS_ALLOC(sizeof(t_dict)));
-		if (MS_ADDRK(*dict)) {
-			MS_MEMSET(*dict, 0, sizeof(t_dict));
-			(*dict)->size = size;
-			content_size = size * sizeof(t_content *);
-			(*dict)->content = MS_CAST(t_content **, MS_ALLOC(content_size));
-			if (MS_NULL((*dict)->content)) {
-				MS_DEALLOC(*dict);
-				return (1);
-			}
-			MS_MEMSET((*dict)->content, 0, content_size);
-			return (0);
-		}
-	}
-	return (1);
-}
+);
 
 /*! Dictionary free
  *
@@ -62,31 +49,12 @@ int		dict_init(
  *
  * @result NaN
 */
-static inline
-void		dict_free(
-	  t_dict *dict
-	, void (*f_free)(void *data)
-) {
-	size_t    i;
-	t_content *content;
+void dict_free(
+	  t_dict * dict
+	, void (*f_free)(void * data)
+);
 
-	if (MS_ADDRK(dict)) {
-		i = 0;
-		while (i < dict->size) {
-			while (MS_ADDRK(dict->content[i])) {
-				content = dict->content[i];
-				dict->content[i] = dict->content[i]->next;
-				if (MS_ADDRK(f_free)) {
-					f_free(content->data);
-				}
-				MS_DEALLOC(content);
-			}
-			++i;
-		}
-		MS_DEALLOC(dict->content);
-		MS_DEALLOC(dict);
-	}
-}
+/*------------------------------------- METHODS -------------------------------------*/
 
 /*! Dictionary insert
  *
@@ -115,38 +83,14 @@ void		dict_free(
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			dict_insert(
-	  t_dict *dict
-	, void *data
+int dict_insert(
+	  t_dict * dict
+	, void * data
 	, size_t size
-	, unsigned char *key
+	, unsigned char * key
 	, size_t key_len
-	, size_t (*f_hash)(unsigned char *key, size_t key_len)
-) {
-	size_t		i;
-	t_content	*content;
-
-	if (
-		   MS_ADDRK(dict)
-		&& MS_ADDRK(data)
-		&& MS_ADDRK(key)
-		&& MS_ADDRK(f_hash)
-	) {
-		content = content_init(data, size);
-		if (MS_ADDRK(content)) {
-			i = f_hash(key, key_len) % dict->size;
-			if (MS_ADDRK(dict->content[i])) {
-				content->next = dict->content[i];
-				dict->content[i] = content;
-			} else {
-				dict->content[i] = content;
-			}
-			return (0);
-		}
-	}
-	return (1);
-}
+	, size_t (*f_hash)(unsigned char * key, size_t key_len)
+);
 
 /*! Dictionary search
  *
@@ -184,41 +128,14 @@ int			dict_insert(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-void		*dict_search(
-	  t_dict *dict
-	, unsigned char *key
+void *dict_search(
+	  t_dict * dict
+	, unsigned char * key
 	, size_t key_len
-	, size_t (*f_hash)(unsigned char *key, size_t key_len)
-	, int (*f_compare)(void *data, unsigned char *key, size_t key_len)
-) {
-	size_t		i;
-	t_content	*content;
+	, size_t (*f_hash)(unsigned char * key, size_t key_len)
+	, int (*f_compare)(void * data, unsigned char * key, size_t key_len)
+);
 
-	if (
-		   MS_ADDRK(dict)
-		&& MS_ADDRK(key)
-		&& MS_ADDRK(f_hash)
-		&& MS_ADDRK(f_compare)
-	) {
-		i = f_hash(key, key_len) % dict->size;
-		content = dict->content[i];
-		if (MS_ADDRK(content)) {
-			if (MS_NULL(content->next)) {
-				if (0 == f_compare(content->data, key, key_len)) {
-					return (content->data);
-				}
-			} else {
-				while(MS_ADDRK(content)) {
-					if (0 == f_compare(content->data, key, key_len)) {
-						return (content->data);
-					}
-					content = content->next;
-				}
-			}
-		}
-	}
-	return (NULL);
-}
+#endif /* !MS_DICT_H */
 
-#endif
+/* EOF */

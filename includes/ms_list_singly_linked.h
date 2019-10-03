@@ -3,13 +3,16 @@
 
 # ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
+# endif /* !MS_STRUCT_H */
 
-typedef struct			s_list_s
-{
-	void				*data;
-	struct s_list_s		*next;
-}						t_list_s;
+/*----------------------------------- STRUCTURES ------------------------------------*/
+
+struct s_list_s;
+
+/* Type opaque */
+typedef struct s_list_s t_list_s;
+
+/*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
 /*! Singly-linked List node init
  *
@@ -24,33 +27,10 @@ typedef struct			s_list_s
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-t_list_s		*list_s_node(
-	  void *data
+t_list_s *list_s_node(
+	  void * data
 	, size_t size
-) {
-	void     *copy;
-	t_list_s *list;
-
-	list = MS_CAST(t_list_s *, MS_ALLOC(sizeof(t_list_s)));
-	if (MS_ADDRK(list)) {
-		MS_MEMSET(list, 0, sizeof(t_list_s));
-		if (0 == size) {
-			list->data = data;
-		} else {
-			copy = MS_ALLOC(size);
-			if (MS_ADDRK(copy)) {
-				MS_MEMCPY(copy, data, size);
-				list->data = copy;
-			} else {
-				MS_DEALLOC(list);
-				return (NULL);
-			}
-		}
-		list->next = NULL;
-	}
-	return (list);
-}
+);
 
 /*! Singly-linked List free
  *
@@ -66,29 +46,12 @@ t_list_s		*list_s_node(
  *
  * @result NaN.
 */
-static inline
-void			list_s_free(
-	  t_list_s **list
+void list_s_free(
+	  t_list_s ** list
 	, void (*f_free)(void *data)
-) {
-	t_list_s	*content;
+);
 
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-	) {
-		while (MS_ADDRK(*list))
-		{
-			content = *list;
-			*list = (*list)->next;
-			if (MS_ADDRK(f_free)) {
-				f_free(content->data);
-			}
-			MS_DEALLOC(content);
-		}
-		*list = NULL;
-	}
-}
+/*------------------------------------- METHODS -------------------------------------*/
 
 /*! Singly-linked is empty
  *
@@ -100,16 +63,7 @@ void			list_s_free(
  * @result If successful, 1 is returned.
  *         Otherwise, a 0 is returned.
 */
-static inline
-int			list_s_is_empty(const t_list_s *list)
-{
-	if (MS_ADDRK(list)) {
-		if (MS_ADDRK(list->data)) {
-			return (0);
-		}
-	}
-	return (1);
-}
+int list_s_is_empty(const t_list_s * list);
 
 /*! Singly-linked List function
  *
@@ -127,30 +81,10 @@ int			list_s_is_empty(const t_list_s *list)
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-static inline
-int				list_s_fct(
-	  t_list_s **list
-	, int (*f_fct)(void *data)
-) {
-	int         ret;
-	t_list_s	*content;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-		&& MS_ADDRK(f_fct)
-	) {
-		content = *list;
-		while (MS_ADDRK(content)) {
-			ret = f_fct(content->data);
-			if (0 != ret) {
-				return (ret);
-			}
-			content = content->next;
-		}
-	}
-	return (0);
-}
+int list_s_fct(
+	  t_list_s ** list
+	, int (*f_fct)(void * data)
+);
 
 /*! Singly-linked List push front
  *
@@ -167,27 +101,11 @@ int				list_s_fct(
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			list_s_push_front(
-	  t_list_s **list
-	, void *data
+int list_s_push_front(
+	  t_list_s ** list
+	, void * data
 	, size_t size
-) {
-	t_list_s	*node;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(data)
-	) {
-		node = list_s_node(data, size);
-		if (MS_ADDRK(node)) {
-			node->next = *list;
-			*list = node;
-			return (0);
-		}
-	}
-	return (1);
-}
+);
 
 /*! Singly-linked List push back
  *
@@ -204,35 +122,11 @@ int			list_s_push_front(
  * @result If successful, 0 is returned.
  *         Otherwise, a 1 is returned.
 */
-static inline
-int			list_s_push_back(
-	  t_list_s **list
-	, void *data
+int list_s_push_back(
+	  t_list_s ** list
+	, void * data
 	, size_t size
-) {
-	t_list_s	*tmp;
-	t_list_s	*node;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(data)
-	) {
-		node = list_s_node(data, size);
-		if (MS_ADDRK(node)) {
-			if (MS_ADDRK(*list)) {
-				tmp = *list;
-				while (MS_ADDRK(tmp->next)) {
-					tmp = tmp->next;
-				}
-				tmp->next = node;
-			} else {
-				*list = node;
-			}
-			return (0);
-		}
-	}
-	return (1);
-}
+);
 
 /*! Singly-linked List first element
  *
@@ -246,28 +140,10 @@ int			list_s_push_back(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-void		*list_s_first_element(
-	  t_list_s **list
+void *list_s_first_element(
+	  t_list_s ** list
 	, int flag
-) {
-	void		*data;
-	t_list_s	*node;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-	) {
-		node = *list;
-		data = node->data;
-		if (MS_ELEMENT_REMOVE & flag) {
-			*list = node->next;
-			MS_DEALLOC(node);
-		}
-		return (data);
-	}
-	return (NULL);
-}
+);
 
 /*! Singly-linked List last element
  *
@@ -281,37 +157,10 @@ void		*list_s_first_element(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-void		*list_s_last_element(
-	  t_list_s **list
+void *list_s_last_element(
+	  t_list_s ** list
 	, int flag
-) {
-	void     *data;
-	t_list_s *node;
-	t_list_s *prev;
-
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-	) {
-		if (MS_NULL((*list)->next)) {
-			return (list_s_first_element(list, flag));
-		}
-		node = *list;
-		prev = node;
-		while (MS_ADDRK(node->next)) {
-			prev = node;
-			node = node->next;
-		}
-		data = node->data;
-		if (MS_ELEMENT_REMOVE & flag) {
-			prev->next = NULL;
-			MS_DEALLOC(node);
-		}
-		return (data);
-	}
-	return (NULL);
-}
+);
 
 /*! Singly-linked List n-th element
  *
@@ -327,38 +176,12 @@ void		*list_s_last_element(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-static inline
-void		*list_s_nth_element(
-	  t_list_s **list
+void *list_s_nth_element(
+	  t_list_s ** list
 	, size_t n
 	, int flag
-) {
-	void		*data;
-	t_list_s	*tmp;
-	t_list_s	*node;
+);
 
-	if (0 == n)
-		return (list_s_first_element(list, flag));
-	if (
-		   MS_ADDRK(list)
-		&& MS_ADDRK(*list)
-	) {
-		node = *list;
-		while (MS_ADDRK(node->next) && n) {
-			if (1 == n) {
-				data = node->next->data;
-				if (MS_ELEMENT_REMOVE & flag) {
-					tmp = node->next;
-					node->next = node->next->next;
-					MS_DEALLOC(tmp);
-				}
-				return (data);
-			}
-			node = node->next;
-			--n;
-		}
-	}
-	return (NULL);
-}
+#endif /* !MS_LIST_SINGLY_LINKED_H */
 
-#endif
+/* EOF */

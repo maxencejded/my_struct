@@ -1,13 +1,19 @@
 #include <stdio.h>
 #include <strings.h>
-#include <ms_struct.h>
 
-// clang -Wall -Wextra -Werror -g -I includes main.c -o test -DDEBUG
+#include <ms_list_singly_linked.h>
+#include <ms_list_doubly_linked.h>
+#include <ms_list_circular_linked.h>
+#include <ms_stack.h>
+#include <ms_queue.h>
+#include <ms_dict.h>
+#include <ms_hash.h>
+#include <ms_tree.h>
 
 # define SUCCESS 0
 # define FAILURE 1
 
-const char	*str[] = {
+const char * str[] = {
 	"Apricots",
 	"Apple",
 	"Banana",
@@ -21,9 +27,10 @@ const char	*str[] = {
 	"Strawberries",
 	NULL
 };
-size_t		size   = (sizeof(str) / sizeof(char *)) - 1;
 
-static int	f_print(void *data)
+size_t       size  = (sizeof(str) / sizeof(char *)) - 1;
+
+static int f_print(void * data)
 {
 #ifdef DEBUG
 	printf("%s\n", MS_CAST(char *, data));
@@ -33,12 +40,12 @@ static int	f_print(void *data)
 	return (0);
 }
 
-int			unit_list_singly(void)
+int unit_list_singly(void)
 {
-	size_t   i;
-	int      ret;
-	char     *tmp;
-	t_list_s *list;
+	size_t     i;
+	int        ret;
+	char     * tmp;
+	t_list_s * list;
 
 	list = NULL;
 	ret = list_s_is_empty(list);
@@ -54,10 +61,6 @@ int			unit_list_singly(void)
 			return (FAILURE);
 		}
 		++i;
-	}
-	if (size != list_s_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
 	}
 	i = 0;
 	while (i < size) {
@@ -88,10 +91,6 @@ int			unit_list_singly(void)
 		}
 		++i;
 	}
-	if (size != list_s_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
-	}
 	i = 0;
 	while (i < size) {
 		tmp = MS_CAST(char *, list_s_nth_element(&list, size - i - 1, 0x00));
@@ -100,10 +99,6 @@ int			unit_list_singly(void)
 			return (FAILURE);
 		}
 		++i;
-	}
-	if (size != list_s_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
 	}
 	i = 0;
 	while (i < size) {
@@ -122,12 +117,12 @@ int			unit_list_singly(void)
 	return (SUCCESS);
 }
 
-int			unit_list_doubly(void)
+int unit_list_doubly(void)
 {
-	size_t   i;
-	int      ret;
-	char     *tmp;
-	t_list_d *list;
+	size_t     i;
+	int        ret;
+	char     * tmp;
+	t_list_d * list;
 
 	list = NULL;
 	ret = list_d_is_empty(list);
@@ -145,10 +140,6 @@ int			unit_list_doubly(void)
 		++i;
 	}
 	i = 0;
-	if (size != list_d_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
-	}
 	i = 0;
 	while (i < size) {
 		tmp = MS_CAST(char *, list_d_nth_element(&list, i, 0x00));
@@ -178,10 +169,6 @@ int			unit_list_doubly(void)
 		}
 		++i;
 	}
-	if (size != list_d_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
-	}
 	i = 0;
 	while (i < size) {
 		tmp = MS_CAST(char *, list_d_nth_element(&list, size - i - 1, 0x00));
@@ -190,10 +177,6 @@ int			unit_list_doubly(void)
 			return (FAILURE);
 		}
 		++i;
-	}
-	if (size != list_d_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
 	}
 	i = 0;
 	while (i < size) {
@@ -212,12 +195,12 @@ int			unit_list_doubly(void)
 	return (SUCCESS);
 }
 
-int			unit_list_circular(void)
+int unit_list_circular(void)
 {
-	size_t   i;
-	int      ret;
-	char     *tmp;
-	t_list_c *list;
+	size_t     i;
+	int        ret;
+	char     * tmp;
+	t_list_c * list;
 
 	list = NULL;
 	ret = list_c_is_empty(list);
@@ -234,10 +217,6 @@ int			unit_list_circular(void)
 		}
 		++i;
 	}
-	if (size != list_c_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
-	}
 	i = 0;
 	while (i < size) {
 		tmp = MS_CAST(char *, list_c_nth_element(&list, i, 0x00));
@@ -246,10 +225,6 @@ int			unit_list_circular(void)
 			return (FAILURE);
 		}
 		++i;
-	}
-	if (size != list_c_size(list)) {
-		printf("\n%s: %d - ", __FILE__, __LINE__);
-		return (FAILURE);
 	}
 	ret = list_c_fct(&list, &f_print);
 	if (0 != ret) {
@@ -273,12 +248,12 @@ int			unit_list_circular(void)
 	return (SUCCESS);
 }
 
-int			unit_stack(void)
+int unit_stack(void)
 {
-	size_t  i;
-	int     ret;
-	char    *tmp;
-	t_stack *stack;
+	size_t    i;
+	int       ret;
+	char    * tmp;
+	t_stack * stack;
 
 	stack = NULL;
 	ret = stack_is_empty(stack);
@@ -323,12 +298,12 @@ int			unit_stack(void)
 	return (SUCCESS);
 }
 
-int			unit_queue(void)
+int unit_queue(void)
 {
-	size_t  i;
-	int     ret;
-	char    *tmp;
-	t_queue *queue;
+	size_t    i;
+	int       ret;
+	char    * tmp;
+	t_queue * queue;
 
 	queue = NULL;
 	ret = queue_is_empty(queue);
@@ -382,21 +357,21 @@ int			unit_queue(void)
 	return (SUCCESS);
 }
 
-static int	f_compare(
-	  void *data
-	, unsigned char *key
+static int f_compare(
+	  void * data
+	, unsigned char * key
 	, size_t key_len
 ) {
 	MS_UNUSED(key_len);
 	return (strcmp(MS_CAST(char *, data), MS_CAST(char *, key)));
 }
 
-int			unit_dictionary(void)
+int unit_dictionary(void)
 {
-	size_t i;
-	int    ret;
-	char   *tmp;
-	t_dict *dict;
+	size_t   i;
+	int      ret;
+	char   * tmp;
+	t_dict * dict;
 
 	dict = NULL;
 	ret = dict_init(&dict, size);
@@ -442,7 +417,7 @@ int			unit_dictionary(void)
 		, &hash_fnv_onea
 		, &f_compare
 	));
-	if (MS_ADDRK(tmp)) {
+	if (MS_ADDRCK(tmp)) {
 		printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
 		return (FAILURE);
 	}
@@ -450,14 +425,14 @@ int			unit_dictionary(void)
 	return (SUCCESS);
 }
 
-static int	f_compare_2(
-	  void *elem
-	, void *data
+static int f_compare_2(
+	  void * elem
+	, void * data
 ) {
 	return (strcmp(MS_CAST(char *, data), MS_CAST(char *, elem)));
 }
 
-static int	f_print_2(void *data, void **content)
+static int f_print_2(void * data, void ** content)
 {
 	MS_UNUSED(content);
 #ifdef DEBUG
@@ -468,11 +443,11 @@ static int	f_print_2(void *data, void **content)
 	return (0);
 }
 
-int			unit_tree(void)
+int unit_tree(void)
 {
-	size_t i;
-	int    ret;
-	t_tree *tree;
+	size_t   i;
+	int      ret;
+	t_tree * tree;
 
 	tree = NULL;
 	ret = tree_is_empty(tree);
@@ -517,11 +492,8 @@ int			unit_tree(void)
 	return (SUCCESS);
 }
 
-int		main(int argc, char *argv[])
+int main(void)
 {
-	(void)argc;
-	(void)argv;
-
 	printf("TEST: Singly-linked list: ");
 	if (SUCCESS == unit_list_singly()) {
 		printf("SUCESS\n");
