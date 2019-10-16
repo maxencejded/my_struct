@@ -1,13 +1,8 @@
 #ifndef MS_QUEUE_H
 # define MS_QUEUE_H
 
-# ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif /* !MS_STRUCT_H */
-
-#ifndef MS_CONTENT_H
-#include <ms_content.h>
-# endif /* !MS_CONTENT_H */
+# include <ms_content.h>
 
 /*----------------------------------- STRUCTURES ------------------------------------*/
 

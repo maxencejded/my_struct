@@ -1,9 +1,7 @@
 #ifndef MS_LIST_DOUBLY_LINKED_H
 # define MS_LIST_DOUBLY_LINKED_H
 
-# ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif /* !MS_STRUCT_H */
 
 /*----------------------------------- STRUCTURES ------------------------------------*/
 

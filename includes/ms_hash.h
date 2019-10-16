@@ -1,9 +1,7 @@
 #ifndef MS_HASH_H
 # define MS_HASH_H
 
-# ifndef MS_STRUCT_H
 # include <ms_struct.h>
-# endif
 
 # ifdef __x86_64
 # define FNV_PRIME  0x100000001B3
