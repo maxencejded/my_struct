@@ -404,7 +404,7 @@ int unit_dictionary(void)
 			, &hash_fnv_onea
 			, &f_compare
 		));
-		if (MS_NULL(tmp)) {
+		if (MS_ADDRNULL(tmp)) {
 			printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
 			return (FAILURE);
 		}

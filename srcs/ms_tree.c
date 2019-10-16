@@ -80,8 +80,9 @@ int tree_fct_pre_order(
 		&& MS_ADDRCK(*tree)
 	) {
 		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
+		if (0 != ret) {
 			return (ret);
+		}
 		tree_fct_pre_order(&(*tree)->left, content, f_fct);
 		tree_fct_pre_order(&(*tree)->right, content, f_fct);
 	}
@@ -102,8 +103,9 @@ int tree_fct_in_order(
 	) {
 		tree_fct_in_order(&(*tree)->left, content, f_fct);
 		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
+		if (0 != ret) {
 			return (ret);
+		}
 		tree_fct_in_order(&(*tree)->right, content, f_fct);
 	}
 	return (0);
@@ -123,8 +125,9 @@ int tree_fct_out_order(
 	) {
 		tree_fct_out_order(&(*tree)->right, content, f_fct);
 		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
+		if (0 != ret) {
 			return (ret);
+		}
 		tree_fct_out_order(&(*tree)->left, content, f_fct);
 	}
 	return (0);
@@ -145,8 +148,9 @@ int tree_fct_post_order(
 		tree_fct_post_order(&(*tree)->left, content, f_fct);
 		tree_fct_post_order(&(*tree)->right, content, f_fct);
 		ret = f_fct((*tree)->data, content);
-		if (0 != ret)
+		if (0 != ret) {
 			return (ret);
+		}
 	}
 	return (0);
 }

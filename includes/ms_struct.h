@@ -17,7 +17,7 @@
 /*
  * MS_STRUCT specific define
 */
-# define MS_NULL(addr)                (addr == NULL) ? 1 : 0
+# define MS_ADDRNULL(addr)            (addr == NULL) ? 1 : 0
 # define MS_ADDRCK(addr)              (addr == NULL) ? 0 : 1
 # define MS_CAST(type, content)       __SYS_CAST(type, content)
 # define MS_UNUSED(content)           __SYS_UNUSED(content)

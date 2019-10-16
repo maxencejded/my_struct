@@ -23,7 +23,7 @@ int dict_init(
 			(*dict)->size = size;
 			content_size = size * sizeof(t_content *);
 			(*dict)->content = MS_CAST(t_content **, MS_ALLOC(content_size));
-			if (MS_NULL((*dict)->content)) {
+			if (MS_ADDRNULL((*dict)->content)) {
 				MS_DEALLOC(*dict);
 				return (1);
 			}
@@ -112,7 +112,7 @@ void *dict_search(
 		i = f_hash(key, key_len) % dict->size;
 		content = dict->content[i];
 		if (MS_ADDRCK(content)) {
-			if (MS_NULL(content->next)) {
+			if (MS_ADDRNULL(content->next)) {
 				if (0 == f_compare(content->data, key, key_len)) {
 					return (content->data);
 				}

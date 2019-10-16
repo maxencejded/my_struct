@@ -13,8 +13,8 @@ struct s_list_c
 
 t_list_c *list_c_node(
 	  void * data
-	, size_t size)
-{
+	, size_t size
+) {
 	void     * copy;
 	t_list_c * list;
 

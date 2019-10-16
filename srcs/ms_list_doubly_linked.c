@@ -188,7 +188,7 @@ void *list_d_last_element(
 		   MS_ADDRCK(list)
 		&& MS_ADDRCK(*list)
 	) {
-		if (MS_NULL((*list)->next)) {
+		if (MS_ADDRNULL((*list)->next)) {
 			return (list_d_first_element(list, flag));
 		}
 		node = *list;
