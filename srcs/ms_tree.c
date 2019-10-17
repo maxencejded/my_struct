@@ -45,8 +45,8 @@ void tree_free(
 		   MS_ADDRCK(tree)
 		&& MS_ADDRCK(*tree)
 	) {
-		tree_free(&(*tree)->left, f_free);
-		tree_free(&(*tree)->right, f_free);
+		tree_free(&((*tree)->left), f_free);
+		tree_free(&((*tree)->right), f_free);
 		if (MS_ADDRCK(f_free)) {
 			f_free((*tree)->data);
 		}
@@ -67,95 +67,7 @@ int tree_is_empty(const t_tree * tree)
 	return (1);
 }
 
-int tree_fct_pre_order(
-	  t_tree ** tree
-	, void ** content
-	, int (*f_fct)(void * data, void ** content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRCK(tree)
-		&& MS_ADDRCK(f_fct)
-		&& MS_ADDRCK(*tree)
-	) {
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret) {
-			return (ret);
-		}
-		tree_fct_pre_order(&(*tree)->left, content, f_fct);
-		tree_fct_pre_order(&(*tree)->right, content, f_fct);
-	}
-	return (0);
-}
-
-int tree_fct_in_order(
-	  t_tree ** tree
-	, void ** content
-	, int (*f_fct)(void * data, void ** content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRCK(tree)
-		&& MS_ADDRCK(f_fct)
-		&& MS_ADDRCK(*tree)
-	) {
-		tree_fct_in_order(&(*tree)->left, content, f_fct);
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret) {
-			return (ret);
-		}
-		tree_fct_in_order(&(*tree)->right, content, f_fct);
-	}
-	return (0);
-}
-
-int tree_fct_out_order(
-	  t_tree ** tree
-	, void ** content
-	, int (*f_fct)(void * data, void ** content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRCK(tree)
-		&& MS_ADDRCK(f_fct)
-		&& MS_ADDRCK(*tree)
-	) {
-		tree_fct_out_order(&(*tree)->right, content, f_fct);
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret) {
-			return (ret);
-		}
-		tree_fct_out_order(&(*tree)->left, content, f_fct);
-	}
-	return (0);
-}
-
-int tree_fct_post_order(
-	  t_tree ** tree
-	, void ** content
-	, int (*f_fct)(void * data, void ** content)
-) {
-	int ret;
-
-	if (
-		   MS_ADDRCK(tree)
-		&& MS_ADDRCK(f_fct)
-		&& MS_ADDRCK(*tree)
-	) {
-		tree_fct_post_order(&(*tree)->left, content, f_fct);
-		tree_fct_post_order(&(*tree)->right, content, f_fct);
-		ret = f_fct((*tree)->data, content);
-		if (0 != ret) {
-			return (ret);
-		}
-	}
-	return (0);
-}
-
-int tree_push(
+int tree_insert(
 	  t_tree ** tree
 	, void * data
 	, size_t size
@@ -163,6 +75,7 @@ int tree_push(
 ) {
 	int ret;
 
+	ret = 1;
 	if (
 		   MS_ADDRCK(tree)
 		&& MS_ADDRCK(f_compare)
@@ -171,7 +84,12 @@ int tree_push(
 			ret = f_compare((*tree)->data, data);
 			if (ret < 0) {
 				if (MS_ADDRCK((*tree)->left)) {
-					return (tree_push(&(*tree)->left, data, size, f_compare));
+					ret = tree_insert(
+						  &((*tree)->left)
+						, data
+						, size
+						, f_compare
+					);
 				} else {
 					(*tree)->left = tree_leef(data, size);
 					if (MS_ADDRCK((*tree)->left)) {
@@ -180,7 +98,12 @@ int tree_push(
 				}
 			} else {
 				if (MS_ADDRCK((*tree)->right)) {
-					return (tree_push(&(*tree)->right, data, size, f_compare));
+					ret = tree_insert(
+						  &((*tree)->right)
+						, data
+						, size
+						, f_compare
+					);
 				} else {
 					(*tree)->right = tree_leef(data, size);
 					if (MS_ADDRCK((*tree)->right)) {
@@ -195,7 +118,171 @@ int tree_push(
 			}
 		}
 	}
-	return (1);
+	return (ret);
+}
+
+void * tree_search(
+	  t_tree ** tree
+	, void * data
+	, int (*f_compare)(void * elem, void * data)
+) {
+	int    ret;
+	void * elem;
+
+	elem = NULL;
+	if (
+		   MS_ADDRCK(tree)
+		&& MS_ADDRCK(data)
+		&& MS_ADDRCK(f_compare)
+	) {
+		if (MS_ADDRCK(*tree)) {
+			ret = f_compare((*tree)->data, data);
+			if (ret < 0) {
+				elem = tree_search(
+					  &((*tree)->left)
+					, data
+					, f_compare
+				);
+			} else if (ret > 0) {
+				elem = tree_search(
+					  &((*tree)->right)
+					, data
+					, f_compare
+				);
+			} else {
+				elem = (*tree)->data;
+			}
+		}
+	}
+	return (elem);
+}
+
+int tree_pre_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+) {
+	int ret;
+
+	ret = 0;
+	if (
+		   MS_ADDRCK(tree)
+		&& MS_ADDRCK(f_fct)
+		&& MS_ADDRCK(*tree)
+	) {
+		ret = f_fct((*tree)->data, content);
+		if (0 == ret) {
+			ret = tree_pre_order(
+				  &((*tree)->left)
+				, content
+				, f_fct
+			);
+			if (0 == ret) {
+				ret = tree_pre_order(
+					  &((*tree)->right)
+					, content
+					, f_fct
+				);
+			}
+		}
+	}
+	return (0);
+}
+
+int tree_in_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+) {
+	int ret;
+
+	ret = 0;
+	if (
+		   MS_ADDRCK(tree)
+		&& MS_ADDRCK(f_fct)
+		&& MS_ADDRCK(*tree)
+	) {
+		ret = tree_in_order(
+			  &((*tree)->left)
+			, content
+			, f_fct
+		);
+		if (0 == ret) {
+			ret = f_fct((*tree)->data, content);
+			if (0 == ret) {
+				ret = tree_in_order(
+					  &((*tree)->right)
+					, content
+					, f_fct
+				);
+			}
+		}
+	}
+	return (ret);
+}
+
+int tree_out_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+) {
+	int ret;
+
+	ret = 0;
+	if (
+		   MS_ADDRCK(tree)
+		&& MS_ADDRCK(f_fct)
+		&& MS_ADDRCK(*tree)
+	) {
+		ret = tree_out_order(
+			  &((*tree)->right)
+			, content
+			, f_fct
+		);
+		if (0 == ret) {
+			ret = f_fct((*tree)->data, content);
+			if (0 == ret) {
+				ret = tree_out_order(
+					  &((*tree)->left)
+					, content
+					, f_fct
+				);
+			}
+		}
+	}
+	return (ret);
+}
+
+int tree_post_order(
+	  t_tree ** tree
+	, void ** content
+	, int (*f_fct)(void * data, void ** content)
+) {
+	int ret;
+
+	ret = 0;
+	if (
+		   MS_ADDRCK(tree)
+		&& MS_ADDRCK(f_fct)
+		&& MS_ADDRCK(*tree)
+	) {
+		ret = tree_post_order(
+			  &((*tree)->left)
+			, content
+			, f_fct
+		);
+		if (0 == ret) {
+			ret = tree_post_order(
+				  &((*tree)->right)
+				, content
+				, f_fct
+			);
+			if (0 == ret) {
+				ret = f_fct((*tree)->data, content);
+			}
+		}
+	}
+	return (ret);
 }
 
 /* EOF */

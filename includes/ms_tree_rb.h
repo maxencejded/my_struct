@@ -1,18 +1,18 @@
-#ifndef MS_TREE_H
-# define MS_TREE_H
+#ifndef MS_RED_BLACK_TREE
+# define MS_RED_BLACK_TREE
 
 # include <ms_struct.h>
 
 /*----------------------------------- STRUCTURES ------------------------------------*/
 
-struct s_tree;
+struct s_tree_rb;
 
 /* Type opaque */
-typedef struct s_tree t_tree;
+typedef struct s_tree_rb t_tree_rb;
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
-/*! Tree node init
+/*! Red Black Tree node init
  *
  * @brief Create a node for the tree
  *
@@ -25,12 +25,12 @@ typedef struct s_tree t_tree;
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
-t_tree *tree_leef(
+t_tree_rb *tree_rb_leef(
 	  void * data
 	, size_t size
 );
 
-/*! Tree free
+/*! Red Black Tree free
  *
  * @brief Dealloc a tree
  *
@@ -44,14 +44,14 @@ t_tree *tree_leef(
  *
  * @result NaN.
 */
-void tree_free(
-	  t_tree ** tree
+void tree_rb_free(
+	  t_tree_rb ** tree
 	, void (*f_free)(void * data)
 );
 
 /*------------------------------------- METHODS -------------------------------------*/
 
-/*! Tree is empty
+/*! Red Black Tree is empty
  *
  * @brief Check if the tree is empty
  *
@@ -61,9 +61,10 @@ void tree_free(
  * @result If successful, 1 is returned.
  *         Otherwise, a 0 is returned.
 */
-int tree_is_empty(const t_tree * tree);
+int tree_rb_is_empty(const t_tree_rb * tree);
 
-/*! Tree insert
+
+/*! Red Black Tree insert
  *
  * @brief Insert a node on the tree
  *
@@ -88,14 +89,14 @@ int tree_is_empty(const t_tree * tree);
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-int tree_insert(
-	  t_tree ** tree
+int tree_rb_insert(
+	  t_tree_rb ** tree
 	, void * data
 	, size_t size
 	, int (*f_compare)(void * elem, void * data)
 );
 
-/*! Tree search
+/*! Red Black Tree search
  *
  * @brief Find an element on the tree
  *
@@ -117,13 +118,13 @@ int tree_insert(
  * @result If successful, the element is returned.
  *         Otherwise, NULL is returned.
 */
-void * tree_search(
-	  t_tree ** tree
+void * tree_rb_search(
+	  t_tree_rb ** tree
 	, void * data
 	, int (*f_compare)(void * elem, void * data)
 );
 
-/*! Tree function (pre-order)
+/*! Red Black Tree function (pre-order)
  *
  * @brief Apply a function to each leef of tree
  *
@@ -143,13 +144,13 @@ void * tree_search(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-int tree_pre_order(
-	  t_tree ** tree
+int tree_rb_pre_order(
+	  t_tree_rb ** tree
 	, void ** content
 	, int (*f_fct)(void * data, void ** content)
 );
 
-/*! Tree function (in-order)
+/*! Red Black Tree function (in-order)
  *
  * @brief Apply a function to each leef of tree
  *
@@ -169,13 +170,13 @@ int tree_pre_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-int tree_in_order(
-	  t_tree ** tree
+int tree_rb_in_order(
+	  t_tree_rb ** tree
 	, void ** content
 	, int (*f_fct)(void * data, void ** content)
 );
 
-/*! Tree function (out-order)
+/*! Red Black Tree function (out-order)
  *
  * @brief Apply a function to each leef of tree
  *
@@ -195,13 +196,13 @@ int tree_in_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-int tree_out_order(
-	  t_tree ** tree
+int tree_rb_out_order(
+	  t_tree_rb ** tree
 	, void ** content
 	, int (*f_fct)(void * data, void ** content)
 );
 
-/*! Tree function (post-order)
+/*! Red Black Tree function (post-order)
  *
  * @brief Apply a function to each leef of tree
  *
@@ -221,12 +222,12 @@ int tree_out_order(
  * @result If successful, 0 is returned.
  *         Otherwise, a number is returned.
 */
-int tree_post_order(
-	  t_tree ** tree
+int tree_rb_post_order(
+	  t_tree_rb ** tree
 	, void ** content
 	, int (*f_fct)(void * data, void ** content)
 );
 
-#endif /* !MS_TREE_H */
+#endif /* !MS_RED_BLACK_TREE */
 
 /* EOF */

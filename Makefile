@@ -14,7 +14,7 @@ DICT      = ms_dict.c ms_hash.c
 LIST      = ms_list_singly_linked.c ms_list_circular_linked.c ms_list_doubly_linked.c
 QUEUE     = ms_queue.c
 STACK     = ms_stack.c
-TREE      = ms_tree.c
+TREE      = ms_tree.c ms_tree_rb.c
 
 FUNCTIONS = $(CONTENT) $(DICT) $(LIST) $(QUEUE) $(STACK) $(TREE)
 FILES     = $(addprefix srcs/, $(FUNCTIONS))
@@ -25,7 +25,7 @@ OBJECTS   = $(FILES:.c=.o)
 all: $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(DEBUG) $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJECTS)
 	@ar rc $(NAME) $(OBJECTS)

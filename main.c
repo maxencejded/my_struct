@@ -9,6 +9,7 @@
 #include <ms_dict.h>
 #include <ms_hash.h>
 #include <ms_tree.h>
+#include <ms_tree_rb.h>
 
 # define SUCCESS 0
 # define FAILURE 1
@@ -457,7 +458,7 @@ int unit_tree(void)
 	}
 	i = 0;
 	while (i < size) {
-		ret = tree_push(
+		ret = tree_insert(
 			  &tree
 			, MS_CAST(void *, str[i])
 			, 0
@@ -469,7 +470,7 @@ int unit_tree(void)
 		}
 		++i;
 	}
-	ret = tree_fct_in_order(
+	ret = tree_in_order(
 		  &tree
 		, NULL
 		, &f_print_2
@@ -485,6 +486,80 @@ int unit_tree(void)
 	}
 	tree_free(&tree, NULL);
 	ret = tree_is_empty(tree);
+	if (0 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
+static int f_compare_3(
+	  void * elem
+	, void * data
+) {
+	int one;
+	int two;
+
+	one = *(int *)elem;
+	two = *(int *)data;
+	return (two - one);
+}
+
+static int f_print_3(void * data, void ** content)
+{
+	MS_UNUSED(content);
+#ifdef DEBUG
+	printf("%d\n", *(int *)data);
+#else
+	MS_UNUSED(data);
+#endif
+	return (0);
+}
+
+int unit_tree_rb(void)
+{
+	size_t      i;
+	int         ret;
+	int         nbr[] = {50, 22, 25, 12};
+	t_tree_rb * tree;
+
+	tree = NULL;
+	ret = tree_rb_is_empty(tree);
+	if (0 == ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	i = 0;
+	size = 3;
+	while (i < size) {
+		ret = tree_rb_insert(
+			  &tree
+			, MS_CAST(void *, &(nbr[i]))
+			, 0
+			, &f_compare_3
+		);
+		if (0 != ret) {
+			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+			return (FAILURE);
+		}
+		++i;
+	}
+	ret = tree_rb_pre_order(
+		  &tree
+		, NULL
+		, &f_print_3
+	);
+	if (0 != ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	ret = tree_rb_is_empty(tree);
+	if (0 != ret) {
+		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
+		return (FAILURE);
+	}
+	tree_rb_free(&tree, NULL);
+	ret = tree_rb_is_empty(tree);
 	if (0 == ret) {
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 		return (FAILURE);
@@ -532,6 +607,12 @@ int main(void)
 	}
 	printf("TEST: Tree: ");
 	if (SUCCESS == unit_tree()) {
+		printf("SUCESS\n");
+	} else {
+		printf("FAILURE\n");
+	}
+	printf("TEST: Red Black Tree: ");
+	if (SUCCESS == unit_tree_rb()) {
 		printf("SUCESS\n");
 	} else {
 		printf("FAILURE\n");
