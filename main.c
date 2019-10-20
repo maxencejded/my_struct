@@ -375,7 +375,11 @@ int unit_dictionary(void)
 	t_dict * dict;
 
 	dict = NULL;
-	ret = dict_init(&dict, size);
+	ret = dict_init(
+		  &dict
+		, size
+		, &hash_fnv_onea
+	);
 	if (1 == ret) {
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 		return (FAILURE);
@@ -388,7 +392,6 @@ int unit_dictionary(void)
 			, 0
 			, MS_CAST(unsigned char *, str[i])
 			, strlen(str[i])
-			, &hash_fnv_onea
 		);
 		if (ret != 0) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
@@ -402,7 +405,6 @@ int unit_dictionary(void)
 			  dict
 			, MS_CAST(unsigned char *, str[i])
 			, strlen(str[i])
-			, &hash_fnv_onea
 			, &f_compare
 		));
 		if (MS_ADDRNULL(tmp)) {
@@ -415,7 +417,6 @@ int unit_dictionary(void)
 		  dict
 		, MS_CAST(unsigned char *, "Potato")
 		, strlen("Potato")
-		, &hash_fnv_onea
 		, &f_compare
 	));
 	if (MS_ADDRCK(tmp)) {

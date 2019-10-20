@@ -5,6 +5,7 @@
 struct s_dict
 {
 	size_t       size;
+	size_t       (*f_hash)(unsigned char * key, size_t key_len);
 	t_content ** content;
 };
 
@@ -13,22 +14,28 @@ struct s_dict
 int dict_init(
 	  t_dict ** dict
 	, size_t size
+	, size_t (*f_hash)(unsigned char * key, size_t key_len)
 ) {
 	size_t content_size;
 
-	if (MS_ADDRCK(dict)) {
+	if (
+		   size > 0
+		&& MS_ADDRCK(dict)
+		&& MS_ADDRCK(f_hash)
+	) {
 		*dict = MS_CAST(t_dict *, MS_ALLOC(sizeof(t_dict)));
 		if (MS_ADDRCK(*dict)) {
 			MS_MEMSET(*dict, 0, sizeof(t_dict));
 			(*dict)->size = size;
+			(*dict)->f_hash = f_hash;
 			content_size = size * sizeof(t_content *);
 			(*dict)->content = MS_CAST(t_content **, MS_ALLOC(content_size));
-			if (MS_ADDRNULL((*dict)->content)) {
+			if (MS_ADDRCK((*dict)->content)) {
+				MS_MEMSET((*dict)->content, 0, content_size);
+				return (0);
+			} else {
 				MS_DEALLOC(*dict);
-				return (1);
 			}
-			MS_MEMSET((*dict)->content, 0, content_size);
-			return (0);
 		}
 	}
 	return (1);
@@ -67,7 +74,6 @@ int dict_insert(
 	, size_t size
 	, unsigned char * key
 	, size_t key_len
-	, size_t (*f_hash)(unsigned char * key, size_t key_len)
 ) {
 	size_t      i;
 	t_content * content;
@@ -76,11 +82,10 @@ int dict_insert(
 		   MS_ADDRCK(dict)
 		&& MS_ADDRCK(data)
 		&& MS_ADDRCK(key)
-		&& MS_ADDRCK(f_hash)
 	) {
 		content = content_init(data, size);
 		if (MS_ADDRCK(content)) {
-			i = f_hash(key, key_len) % dict->size;
+			i = dict->f_hash(key, key_len) % dict->size;
 			if (MS_ADDRCK(dict->content[i])) {
 				content->next = dict->content[i];
 				dict->content[i] = content;
@@ -93,11 +98,10 @@ int dict_insert(
 	return (1);
 }
 
-void *dict_search(
+void * dict_search(
 	  t_dict * dict
 	, unsigned char * key
 	, size_t key_len
-	, size_t (*f_hash)(unsigned char * key, size_t key_len)
 	, int (*f_compare)(void * data, unsigned char * key, size_t key_len)
 ) {
 	size_t      i;
@@ -106,10 +110,9 @@ void *dict_search(
 	if (
 		   MS_ADDRCK(dict)
 		&& MS_ADDRCK(key)
-		&& MS_ADDRCK(f_hash)
 		&& MS_ADDRCK(f_compare)
 	) {
-		i = f_hash(key, key_len) % dict->size;
+		i = dict->f_hash(key, key_len) % dict->size;
 		content = dict->content[i];
 		if (MS_ADDRCK(content)) {
 			if (MS_ADDRNULL(content->next)) {
