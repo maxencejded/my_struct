@@ -63,6 +63,71 @@ void tree_free(
 */
 int tree_is_empty(const t_tree * tree);
 
+/*! Tree size
+ *
+ * @brief Return the size of the tree
+ *
+ * @param tree
+ *     (input) tree
+ *
+ * @result If successful, size is returned.
+ *         Otherwise, a 0 is returned.
+*/
+size_t tree_size(const t_tree * tree);
+
+/*! Tree depth
+ *
+ * @brief Return the depth of the tree
+ *
+ * @param tree
+ *     (input) tree
+ *
+ * @result If successful, depth is returned.
+ *         Otherwise, a 0 is returned.
+*/
+size_t tree_depth(const t_tree * tree);
+
+/*! Tree is between range
+ *
+ * @brief Verify if the tree is between a range of values
+ * 
+ * @note Can be use to check if it's a BST by setting the
+ *       minimum and the maximum to the range of your time
+ *       exemple for `int`:
+ *           tree_is_between_range(
+ *                 ...
+ *               , INT_MIN
+ *               , INT_MAX
+ *               , ...
+ *           )
+ *
+ * @param tree
+ *     (input) tree
+ * @param min_val
+ *     (input) minimum value of the tree
+ * @param max_val
+ *     (input) maximum value of the tree
+ * @param f_compare
+ *     (input) function use to compare two data
+ *             @param elem
+ *                 (input) elem to compare
+ *             @param value
+ *                 (input) value to compare
+ *
+ *             @result If equals, 0 is returned.
+ *                     If greater, 1 is returned.
+ *                     If smaller, -1 is returned.
+ *
+ * @result If successful, 0 is returned.
+ *         Otherwise, a number is returned.
+*/
+int tree_is_between_range(
+	  const t_tree * tree
+	, void * min_val
+	, void * max_val
+	, int (*f_compare)(void * elem, void * value)
+);
+
 /*! Tree insert
  *
  * @brief Insert a node on the tree

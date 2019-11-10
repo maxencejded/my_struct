@@ -67,6 +67,55 @@ int tree_is_empty(const t_tree * tree)
 	return (1);
 }
 
+size_t tree_size(const t_tree * tree)
+{
+	if (MS_ADDRCK(tree)) {
+		return (tree_size(tree->left) + 1 + tree_size(tree->right));
+	}
+	return (0);
+}
+
+size_t tree_depth(const t_tree * tree)
+{
+	size_t depth_left;
+	size_t depth_right;
+
+	if (MS_ADDRCK(tree)) {
+		depth_left  = tree_depth(tree->left);
+		depth_right = tree_depth(tree->right);
+		if (depth_left > depth_right) {
+			return (depth_left + 1);
+		} else {
+			return (depth_right + 1);
+		}
+	}
+	return (0);
+}
+
+int tree_is_between_range(
+	  const t_tree * tree
+	, void * min_val
+	, void * max_val
+	, int (*f_compare)(void * elem, void * value)
+) {
+	if (MS_ADDRCK(f_compare)) {
+		if (MS_ADDRCK(tree)) {
+			if (
+				   f_compare(tree->data, min_val) < 0
+				&& f_compare(tree->data, max_val) > 0
+			) {
+				return (0);
+			}
+			return (
+				   tree_is_between_range(tree->left, min_val, tree->data, f_compare)
+				&& tree_is_between_range(tree->right, tree->data, max_val, f_compare)
+			);
+		}
+		return (1);
+	}
+	return (-1);
+}
+
 int tree_insert(
 	  t_tree ** tree
 	, void * data
