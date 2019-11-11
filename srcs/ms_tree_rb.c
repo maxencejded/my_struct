@@ -2,16 +2,15 @@
 
 /*----------------------------------- STRUCTURES ------------------------------------*/
 
-# define RED   0x00
-# define BLACK 0x01
-
 struct s_tree_rb
 {
 	void        * data;
 	t_tree_rb   * left;
 	t_tree_rb   * right;
 	t_tree_rb   * parent;
-	unsigned char color;
+	enum colors {
+		RED, BLACK
+	}             color;
 };
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
@@ -61,19 +60,10 @@ void tree_rb_free(
 	}
 }
 
-/*------------------------------------- METHODS -------------------------------------*/
+/*--------------------------------- PRIVATE METHODS ---------------------------------*/
 
-int tree_rb_is_empty(const t_tree_rb * tree)
-{
-	if (MS_ADDRCK(tree)) {
-		if (MS_ADDRCK(tree->data)) {
-			return (0);
-		}
-	}
-	return (1);
-}
-
-static inline void __tree_rb_rotate_left(t_tree_rb * leef)
+static inline
+void __tree_rb_rotate_left(t_tree_rb * leef)
 {
 	t_tree_rb * nleef;
 	t_tree_rb * parent;
@@ -88,19 +78,20 @@ static inline void __tree_rb_rotate_left(t_tree_rb * leef)
 			if (MS_ADDRCK(leef->right)) {
 				leef->right->parent = leef;
 			}
-		}
-		nleef->parent = parent;
-		if (MS_ADDRCK(parent)) {
-			if (parent->left == leef) {
-				parent->left = nleef;
-			} else if (parent->right == leef) {
-				parent->right = nleef;
+			if (MS_ADDRCK(parent)) {
+				if (parent->left == leef) {
+					parent->left = nleef;
+				} else if (parent->right == leef) {
+					parent->right = nleef;
+				}
 			}
+			nleef->parent = parent;
 		}
 	}
 }
 
-static inline void __tree_rb_rotate_right(t_tree_rb * leef)
+static inline
+void __tree_rb_rotate_right(t_tree_rb * leef)
 {
 	t_tree_rb * nleef;
 	t_tree_rb * parent;
@@ -109,7 +100,7 @@ static inline void __tree_rb_rotate_right(t_tree_rb * leef)
 		nleef = leef->left;
 		parent = leef->parent;
 		if (MS_ADDRCK(nleef)) {
-			leef->right = nleef->right;
+			leef->left = nleef->right;
 			nleef->right = leef;
 			leef->parent = nleef;
 			if (MS_ADDRCK(leef->left)) {
@@ -127,7 +118,8 @@ static inline void __tree_rb_rotate_right(t_tree_rb * leef)
 	}
 }
 
-static inline t_tree_rb * __tree_rb_grandparent(t_tree_rb * leef)
+static inline
+t_tree_rb * __tree_rb_grandparent(t_tree_rb * leef)
 {
 	if (
 		   MS_ADDRCK(leef)
@@ -138,7 +130,8 @@ static inline t_tree_rb * __tree_rb_grandparent(t_tree_rb * leef)
 	return (NULL);
 }
 
-static inline t_tree_rb * __tree_rb_oncle(t_tree_rb * leef, t_tree_rb * parent)
+static inline
+t_tree_rb * __tree_rb_oncle(t_tree_rb * leef, t_tree_rb * parent)
 {
 	if (
 		   MS_ADDRCK(leef)
@@ -153,61 +146,136 @@ static inline t_tree_rb * __tree_rb_oncle(t_tree_rb * leef, t_tree_rb * parent)
 	return (NULL);
 }
 
-static int __tree_rb_set(t_tree_rb * leef)
+static inline
+int __tree_rb_set(t_tree_rb * leef)
 {
 	t_tree_rb * parent;
 	t_tree_rb * oncle;
 	t_tree_rb * grandparent;
 
-	if (MS_ADDRCK(leef)) {
-		parent = leef->parent;
-		grandparent = __tree_rb_grandparent(leef);
-		oncle = __tree_rb_oncle(leef, grandparent);
-		if (MS_ADDRNULL(parent)) {
-			leef->color = BLACK;
-		} else if (BLACK == parent->color) {
-			return (0);
-		} else if (
-			   RED == parent->color
-			&& MS_ADDRCK(oncle)
+	parent      = leef->parent;
+	grandparent = __tree_rb_grandparent(leef);
+	oncle       = __tree_rb_oncle(leef, grandparent);
+	if (MS_ADDRNULL(parent)) {
+		leef->color = BLACK;
+	} else if (BLACK == parent->color) {
+		return (0);
+	} else if (
+		   RED == parent->color
+		&& MS_ADDRCK(oncle)
+	) {
+		oncle->color = BLACK;
+		parent->color = BLACK;
+		grandparent->color = RED;
+		return (__tree_rb_set(grandparent));
+	} else {
+		if (
+			   MS_ADDRCK(parent)
+			&& MS_ADDRCK(grandparent)
 		) {
-			oncle->color = BLACK;
-			parent->color = BLACK;
-			grandparent->color = RED;
-			return (__tree_rb_set(grandparent));
-		} else {
+			if (
+				   parent->right == leef
+				&& grandparent->left == parent
+			) {
+				__tree_rb_rotate_left(leef);
+				leef = leef->left;
+			} else if (
+				   parent->left == leef
+				&& grandparent->right == parent
+			) {
+				__tree_rb_rotate_right(leef);
+				leef = leef->right;
+			}
+			if (MS_ADDRCK(leef)) {
+				parent = leef->parent;
+			}
+			grandparent = __tree_rb_grandparent(leef);
 			if (
 				   MS_ADDRCK(parent)
 				&& MS_ADDRCK(grandparent)
 			) {
-				if (
-					parent->right == leef
-					&& grandparent->left == parent
-				) {
-					__tree_rb_rotate_left(leef);
-					leef = leef->left;
-				} else if (
-					parent->left == leef
-					&& grandparent->right == parent
-				) {
-					__tree_rb_rotate_right(leef);
-					leef = leef->right;
+				if (parent->left == leef) {
+					__tree_rb_rotate_right(grandparent);
+				} else {
+					__tree_rb_rotate_left(grandparent);
 				}
-				parent = leef->parent;
-				grandparent = __tree_rb_grandparent(leef);
-				if (
-					MS_ADDRCK(parent)
-					&& MS_ADDRCK(grandparent)
-				) {
-					if (parent->left == leef) {
-						__tree_rb_rotate_left(grandparent);
-					} else {
-						__tree_rb_rotate_right(grandparent);
-					}
-					parent->color = BLACK;
-					grandparent->color = RED;
-				}
+				parent->color = BLACK;
+				grandparent->color = RED;
 			}
+		}
+	}
+	return (0);
+}
+
+static inline
+int __tree_rb_insert_recurse(
+	  t_tree_rb * root
+	, t_tree_rb * leef
+	, int (*f_compare)(void * elem, void * data)
+) {
+	int ret;
+
+	ret = f_compare(root->data, leef->data);
+	if (ret < 0) {
+		if (MS_ADDRCK(root->left)) {
+			ret = __tree_rb_insert_recurse(
+				  root->left
+				, leef
+				, f_compare
+			);
+		} else {
+			root->left = leef;
+			leef->parent = root;
+			ret = 0;
+		}
+	} else {
+		if (MS_ADDRCK(root->right)) {
+			ret = __tree_rb_insert_recurse(
+				  root->right
+				, leef
+				, f_compare
+			);
+		} else {
+			root->right = leef;
+			leef->parent = root;
+			ret = 0;
+		}
+	}
+	return (ret);
+}
+
+/*------------------------------------- METHODS -------------------------------------*/
+
+int tree_rb_is_empty(const t_tree_rb * tree)
+{
+	if (MS_ADDRCK(tree)) {
+		if (MS_ADDRCK(tree->data)) {
+			return (0);
+		}
+	}
+	return (1);
+}
+
+size_t tree_rb_size(const t_tree_rb * tree)
+{
+	if (MS_ADDRCK(tree)) {
+		return (tree_rb_size(tree->left) + 1 + tree_rb_size(tree->right));
+	}
+	return (0);
+}
+
+size_t tree_rb_depth(const t_tree_rb * tree)
+{
+	size_t depth_left;
+	size_t depth_right;
+
+	if (MS_ADDRCK(tree)) {
+		depth_left  = tree_rb_depth(tree->left);
+		depth_right = tree_rb_depth(tree->right);
+		if (depth_left > depth_right) {
+			return (depth_left + 1);
+		} else {
+			return (depth_right + 1);
 		}
 	}
 	return (0);
@@ -219,7 +287,8 @@ int tree_rb_insert(
 	, size_t size
 	, int (*f_compare)(void * elem, void * data)
 ) {
-	int ret;
+	int         ret;
+	t_tree_rb * leef;
 
 	ret = 1;
 	if (
@@ -227,52 +296,25 @@ int tree_rb_insert(
 		&& MS_ADDRCK(data)
 		&& MS_ADDRCK(f_compare)
 	) {
-		if (MS_ADDRCK(*tree)) {
-			ret = f_compare((*tree)->data, data);
-			if (ret < 0) {
-				if (MS_ADDRCK((*tree)->left)) {
-					ret = tree_rb_insert(
-						  &((*tree)->left)
-						, data
-						, size
-						, f_compare
-					);
-				} else {
-					(*tree)->left = tree_rb_leef(data, size);
-					if (MS_ADDRCK((*tree)->left)) {
-						((*tree)->left)->parent = *tree;
-						*tree = (*tree)->left;
-						__tree_rb_set(*tree);
+		leef = tree_rb_leef(data, size);
+		if (MS_ADDRCK(leef)) {
+			if (MS_ADDRCK(*tree)) {
+				ret = __tree_rb_insert_recurse(
+					  *tree
+					, leef
+					, f_compare
+				);
+				if (0 == ret) {
+					ret = __tree_rb_set(leef);
+					if (0 == ret) {
+						*tree = leef;
 						while (MS_ADDRCK((*tree)->parent)) {
 							*tree = (*tree)->parent;
 						}
-						ret = 0;
 					}
 				}
 			} else {
-				if (MS_ADDRCK((*tree)->right)) {
-					ret = tree_rb_insert(
-						  &((*tree)->right)
-						, data
-						, size
-						, f_compare
-					);
-				} else {
-					(*tree)->right = tree_rb_leef(data, size);
-					if (MS_ADDRCK((*tree)->right)) {
-						((*tree)->right)->parent = *tree;
-						*tree = (*tree)->right;
-						__tree_rb_set(*tree);
-						while (MS_ADDRCK((*tree)->parent)) {
-							*tree = (*tree)->parent;
-						}
-						ret = 0;
-					}
-				}
-			}
-		} else {
-			*tree = tree_rb_leef(data, size);
-			if (MS_ADDRCK(*tree)) {
+				*tree = leef;
 				(*tree)->color = BLACK;
 				ret = 0;
 			}

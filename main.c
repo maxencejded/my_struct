@@ -494,34 +494,10 @@ int unit_tree(void)
 	return (SUCCESS);
 }
 
-static int f_compare_3(
-	  void * elem
-	, void * data
-) {
-	int one;
-	int two;
-
-	one = *(int *)elem;
-	two = *(int *)data;
-	return (two - one);
-}
-
-static int f_print_3(void * data, void ** content)
-{
-	MS_UNUSED(content);
-#ifdef DEBUG
-	printf("%d\n", *(int *)data);
-#else
-	MS_UNUSED(data);
-#endif
-	return (0);
-}
-
 int unit_tree_rb(void)
 {
 	size_t      i;
 	int         ret;
-	int         nbr[] = {50, 22, 25, 12};
 	t_tree_rb * tree;
 
 	tree = NULL;
@@ -531,13 +507,12 @@ int unit_tree_rb(void)
 		return (FAILURE);
 	}
 	i = 0;
-	size = 3;
 	while (i < size) {
 		ret = tree_rb_insert(
 			  &tree
-			, MS_CAST(void *, &(nbr[i]))
+			, MS_CAST(void *, str[i])
 			, 0
-			, &f_compare_3
+			, &f_compare_2
 		);
 		if (0 != ret) {
 			printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
@@ -545,10 +520,10 @@ int unit_tree_rb(void)
 		}
 		++i;
 	}
-	ret = tree_rb_pre_order(
+	ret = tree_rb_in_order(
 		  &tree
 		, NULL
-		, &f_print_3
+		, &f_print_2
 	);
 	if (0 != ret) {
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);

@@ -63,6 +63,29 @@ void tree_rb_free(
 */
 int tree_rb_is_empty(const t_tree_rb * tree);
 
+/*! Red Black Tree size
+ *
+ * @brief Return the size of the tree
+ *
+ * @param tree
+ *     (input) tree
+ *
+ * @result If successful, size is returned.
+ *         Otherwise, a 0 is returned.
+*/
+size_t tree_rb_size(const t_tree_rb * tree);
+
+/*! Red Black Tree depth
+ *
+ * @brief Return the depth of the tree
+ *
+ * @param tree
+ *     (input) tree
+ *
+ * @result If successful, depth is returned.
+ *         Otherwise, a 0 is returned.
+*/
+size_t tree_rb_depth(const t_tree_rb * tree);
 
 /*! Red Black Tree insert
  *
