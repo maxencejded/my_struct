@@ -99,6 +99,8 @@ int dict_insert(
  *     (input) key to use
  * @param key_len
  *     (input) length of the key
+ * @param flag
+ *     (input) if bit set to MS_ELEMENT_REMOVE remove it while returned
  * @param f_compare
  *     (input) function use to compare the key with the data
  *             @param data
@@ -119,6 +121,7 @@ void * dict_search(
 	  t_dict * dict
 	, unsigned char * key
 	, size_t key_len
+	, int flag
 	, int (*f_compare)(void * data, unsigned char * key, size_t key_len)
 );
 

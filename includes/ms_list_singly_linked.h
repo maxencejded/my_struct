@@ -25,7 +25,7 @@ typedef struct s_list_s t_list_s;
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
-t_list_s *list_s_node(
+t_list_s * list_s_node(
 	  void * data
 	, size_t size
 );
@@ -138,7 +138,7 @@ int list_s_push_back(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void *list_s_first_element(
+void * list_s_first_element(
 	  t_list_s ** list
 	, int flag
 );
@@ -155,7 +155,7 @@ void *list_s_first_element(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void *list_s_last_element(
+void * list_s_last_element(
 	  t_list_s ** list
 	, int flag
 );

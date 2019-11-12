@@ -10,7 +10,7 @@ struct s_list_s
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
-t_list_s *list_s_node(
+t_list_s * list_s_node(
 	  void * data
 	, size_t size
 ) {
@@ -146,7 +146,7 @@ int list_s_push_back(
 	return (1);
 }
 
-void *list_s_first_element(
+void * list_s_first_element(
 	  t_list_s ** list
 	, int flag
 ) {
@@ -168,7 +168,7 @@ void *list_s_first_element(
 	return (NULL);
 }
 
-void *list_s_last_element(
+void * list_s_last_element(
 	  t_list_s ** list
 	, int flag
 ) {
@@ -199,7 +199,7 @@ void *list_s_last_element(
 	return (NULL);
 }
 
-void *list_s_nth_element(
+void * list_s_nth_element(
 	  t_list_s ** list
 	, size_t n
 	, int flag

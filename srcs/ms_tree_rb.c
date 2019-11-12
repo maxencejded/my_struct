@@ -15,7 +15,7 @@ struct s_tree_rb
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
-t_tree_rb *tree_rb_leef(
+t_tree_rb * tree_rb_leef(
 	  void * data
 	, size_t size
 ) {

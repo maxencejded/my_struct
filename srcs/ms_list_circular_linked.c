@@ -11,7 +11,7 @@ struct s_list_c
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
-t_list_c *list_c_node(
+t_list_c * list_c_node(
 	  void * data
 	, size_t size
 ) {
@@ -147,7 +147,7 @@ int list_c_push(
 	return (1);
 }
 
-void *list_c_element(
+void * list_c_element(
 	  t_list_c ** list
 	, int flag
 ) {
@@ -175,7 +175,7 @@ void *list_c_element(
 	return (NULL);
 }
 
-void *list_c_nth_element(
+void * list_c_nth_element(
 	  t_list_c ** list
 	, size_t n
 	, int flag

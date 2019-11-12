@@ -405,6 +405,7 @@ int unit_dictionary(void)
 			  dict
 			, MS_CAST(unsigned char *, str[i])
 			, strlen(str[i])
+			, 0x00
 			, &f_compare
 		));
 		if (MS_ADDRNULL(tmp)) {
@@ -417,10 +418,11 @@ int unit_dictionary(void)
 		  dict
 		, MS_CAST(unsigned char *, "Potato")
 		, strlen("Potato")
+		, MS_ELEMENT_REMOVE
 		, &f_compare
 	));
 	if (MS_ADDRCK(tmp)) {
-		printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, str[i]);
+		printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, "Potato");
 		return (FAILURE);
 	}
 	dict_free(dict, NULL);

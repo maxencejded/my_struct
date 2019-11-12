@@ -102,34 +102,56 @@ void * dict_search(
 	  t_dict * dict
 	, unsigned char * key
 	, size_t key_len
+	, int flag
 	, int (*f_compare)(void * data, unsigned char * key, size_t key_len)
 ) {
 	size_t      i;
+	void      * data;
+	t_content * tmp;
 	t_content * content;
 
+	data = NULL;
 	if (
 		   MS_ADDRCK(dict)
 		&& MS_ADDRCK(key)
 		&& MS_ADDRCK(f_compare)
 	) {
 		i = dict->f_hash(key, key_len) % dict->size;
-		content = dict->content[i];
-		if (MS_ADDRCK(content)) {
-			if (MS_ADDRNULL(content->next)) {
-				if (0 == f_compare(content->data, key, key_len)) {
-					return (content->data);
+		if (MS_ADDRCK(dict->content[i])) {
+			if (MS_ADDRNULL((dict->content[i])->next)) {
+				if (0 == f_compare((dict->content[i])->data, key, key_len)) {
+					data = (dict->content[i])->data;
+					if (MS_ELEMENT_REMOVE == flag) {
+						MS_DEALLOC(dict->content[i]);
+						dict->content[i] = NULL;
+					}
 				}
 			} else {
-				while(MS_ADDRCK(content)) {
-					if (0 == f_compare(content->data, key, key_len)) {
-						return (content->data);
+				content = dict->content[i];
+				if (0 == f_compare(content->data, key, key_len)) {
+					data = content->data;
+					if (MS_ELEMENT_REMOVE == flag) {
+						dict->content[i] = content->next;
+						MS_DEALLOC(content);
 					}
-					content = content->next;
+				} else {
+					tmp = content->next;
+					while (MS_ADDRCK(tmp)) {
+						if (0 == f_compare(tmp->data, key, key_len)) {
+							data = tmp->data;
+							if (MS_ELEMENT_REMOVE == flag) {
+								content->next = tmp->next;
+								MS_DEALLOC(tmp);
+							}
+						}
+						content = content->next;
+						tmp     = content->next;
+					}
 				}
 			}
 		}
 	}
-	return (NULL);
+	return (data);
 }
 
 /* EOF */

@@ -74,7 +74,7 @@ int stack_push(
 	return (1);
 }
 
-void *stack_pop(t_stack * stack)
+void * stack_pop(t_stack * stack)
 {
 	void      * data;
 	t_content * content;

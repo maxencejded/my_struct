@@ -11,7 +11,7 @@ struct s_list_d
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
-t_list_d *list_d_node(
+t_list_d * list_d_node(
 	  void * data
 	, size_t size
 ) {
@@ -151,7 +151,7 @@ int list_d_push_back(
 	return (1);
 }
 
-void *list_d_first_element(
+void * list_d_first_element(
 	  t_list_d **list
 	, int flag
 ) {
@@ -176,7 +176,7 @@ void *list_d_first_element(
 	return (NULL);
 }
 
-void *list_d_last_element(
+void * list_d_last_element(
 	  t_list_d ** list
 	, int flag
 ) {

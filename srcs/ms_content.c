@@ -2,7 +2,7 @@
 
 /*-------------------------------- CONSTRUCTOR/DESTR --------------------------------*/
 
-t_content *content_init(
+t_content * content_init(
 	  void * data
 	, size_t size
 ) {

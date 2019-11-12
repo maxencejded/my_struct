@@ -25,7 +25,7 @@ typedef struct s_tree t_tree;
  * @result If successful, the node is returned.
  *         Otherwise, NULL is returned.
 */
-t_tree *tree_leef(
+t_tree * tree_leef(
 	  void * data
 	, size_t size
 );
