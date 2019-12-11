@@ -1,5 +1,5 @@
-#ifndef MS_RED_BLACK_TREE
-# define MS_RED_BLACK_TREE
+#ifndef MS_RED_BLACK_H
+# define MS_RED_BLACK_H
 
 # include <ms_struct.h>
 
@@ -251,6 +251,6 @@ int tree_rb_post_order(
 	, int (*f_fct)(void * data, void ** content)
 );
 
-#endif /* !MS_RED_BLACK_TREE */
+#endif /* !MS_RED_BLACK_H */
 
 /* EOF */

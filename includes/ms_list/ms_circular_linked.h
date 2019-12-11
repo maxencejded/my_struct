@@ -1,5 +1,5 @@
-#ifndef MS_LIST_CIRCULAR_H
-# define MS_LIST_CIRCULAR_H
+#ifndef MS_CIRCULAR_LINKED_H
+# define MS_CIRCULAR_LINKED_H
 
 # include <ms_struct.h>
 
@@ -144,6 +144,6 @@ void * list_c_nth_element(
 	, int flag
 );
 
-#endif /* !MS_LIST_CIRCULAR_H */
+#endif /* !MS_CIRCULAR_LINKED_H */
 
 /* EOF */

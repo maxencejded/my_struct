@@ -1,5 +1,5 @@
-#ifndef MS_LIST_DOUBLY_LINKED_H
-# define MS_LIST_DOUBLY_LINKED_H
+#ifndef MS_DOUBLY_LINKED_H
+# define MS_DOUBLY_LINKED_H
 
 # include <ms_struct.h>
 
@@ -180,6 +180,6 @@ void *list_d_nth_element(
 	, int flag
 );
 
-#endif /* !MS_LIST_DOUBLY_LINKED_H */
+#endif /* !MS_DOUBLY_LINKED_H */
 
 /* EOF */

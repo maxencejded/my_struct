@@ -1,5 +1,5 @@
-#ifndef MS_TREE_H
-# define MS_TREE_H
+#ifndef MS_BINARY_H
+# define MS_BINARY_H
 
 # include <ms_struct.h>
 
@@ -292,6 +292,6 @@ int tree_post_order(
 	, int (*f_fct)(void * data, void ** content)
 );
 
-#endif /* !MS_TREE_H */
+#endif /* !MS_BINARY_H */
 
 /* EOF */
