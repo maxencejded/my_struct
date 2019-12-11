@@ -30,7 +30,7 @@ t_list_d * list_d_node(
 	, size_t size
 );
 
-/*! Doubly-linked List free
+/*! Doubly-linked List destroy
  *
  * @brief Dealloc an doubly-linked list
  *
@@ -44,7 +44,7 @@ t_list_d * list_d_node(
  *
  * @result NaN.
 */
-void list_d_free(
+void list_d_destroy(
 	  t_list_d ** list
 	, void (*f_free)(void * data)
 );

@@ -19,16 +19,16 @@ int dict_init(
 	size_t content_size;
 
 	if (
-		   size > 0
-		&& MS_ADDRCK(dict)
+		   MS_ADDRCK(dict)
+		&& size > 0
 		&& MS_ADDRCK(f_hash)
 	) {
 		*dict = MS_CAST(t_dict *, MS_ALLOC(sizeof(t_dict)));
 		if (MS_ADDRCK(*dict)) {
 			MS_MEMSET(*dict, 0, sizeof(t_dict));
-			(*dict)->size = size;
-			(*dict)->f_hash = f_hash;
-			content_size = size * sizeof(t_content *);
+			(*dict)->size    = size;
+			(*dict)->f_hash  = f_hash;
+			content_size     = size * sizeof(t_content *);
 			(*dict)->content = MS_CAST(t_content **, MS_ALLOC(content_size));
 			if (MS_ADDRCK((*dict)->content)) {
 				MS_MEMSET((*dict)->content, 0, content_size);
@@ -41,7 +41,7 @@ int dict_init(
 	return (1);
 }
 
-void dict_free(
+void dict_destroy(
 	  t_dict * dict
 	, void (*f_free)(void * data)
 ) {
@@ -49,19 +49,21 @@ void dict_free(
 	t_content * content;
 
 	if (MS_ADDRCK(dict)) {
-		i = 0;
-		while (i < dict->size) {
-			while (MS_ADDRCK(dict->content[i])) {
-				content = dict->content[i];
-				dict->content[i] = dict->content[i]->next;
-				if (MS_ADDRCK(f_free)) {
-					f_free(content->data);
+		if (MS_ADDRCK(dict->content)) {
+			i = 0;
+			while (i < dict->size) {
+				while (MS_ADDRCK(dict->content[i])) {
+					content = dict->content[i];
+					dict->content[i] = dict->content[i]->next;
+					content_destroy(
+						  content
+						, f_free
+					);
 				}
-				MS_DEALLOC(content);
+				++i;
 			}
-			++i;
+			MS_DEALLOC(dict->content);
 		}
-		MS_DEALLOC(dict->content);
 		MS_DEALLOC(dict);
 	}
 }
@@ -88,10 +90,8 @@ int dict_insert(
 			i = dict->f_hash(key, key_len) % dict->size;
 			if (MS_ADDRCK(dict->content[i])) {
 				content->next = dict->content[i];
-				dict->content[i] = content;
-			} else {
-				dict->content[i] = content;
 			}
+			dict->content[i] = content;
 			return (0);
 		}
 	}
@@ -122,7 +122,10 @@ void * dict_search(
 				if (0 == f_compare((dict->content[i])->data, key, key_len)) {
 					data = (dict->content[i])->data;
 					if (MS_ELEMENT_REMOVE == flag) {
-						MS_DEALLOC(dict->content[i]);
+						content_destroy(
+							  dict->content[i]
+							, NULL
+						);
 						dict->content[i] = NULL;
 					}
 				}
@@ -132,7 +135,10 @@ void * dict_search(
 					data = content->data;
 					if (MS_ELEMENT_REMOVE == flag) {
 						dict->content[i] = content->next;
-						MS_DEALLOC(content);
+						content_destroy(
+							  content
+							, NULL
+						);
 					}
 				} else {
 					tmp = content->next;
@@ -141,7 +147,10 @@ void * dict_search(
 							data = tmp->data;
 							if (MS_ELEMENT_REMOVE == flag) {
 								content->next = tmp->next;
-								MS_DEALLOC(tmp);
+								content_destroy(
+									  tmp
+									, NULL
+								);
 							}
 						}
 						content = content->next;

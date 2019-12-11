@@ -39,7 +39,7 @@ t_list_c * list_c_node(
 	return (list);
 }
 
-void list_c_free(
+void list_c_destroy(
 	  t_list_c **list
 	, void (*f_free)(void *data)
 ) {

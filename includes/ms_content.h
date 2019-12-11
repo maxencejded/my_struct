@@ -32,6 +32,25 @@ t_content	* content_init(
 	, size_t size
 );
 
+/*! Content destroy
+ *
+ * @brief Dealloc a content
+ *
+ * @param content
+ *     (input) content to free
+ * @param f_free
+ *     (input) function to free the data
+ *             @param data
+ *                 (input) data to free
+ *             @result NaN
+ *
+ * @result NaN
+*/
+void content_destroy(
+	  t_content * content
+	, void (*f_free)(void * data)
+);
+
 #endif /* !MS_CONTENT_H */
 
 /* EOF */

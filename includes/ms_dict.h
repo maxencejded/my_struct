@@ -39,7 +39,7 @@ int dict_init(
 	, size_t (*f_hash)(unsigned char * key, size_t key_len)
 );
 
-/*! Dictionary free
+/*! Dictionary destroy
  *
  * @brief Dealloc a dictionary
  *
@@ -53,7 +53,7 @@ int dict_init(
  *
  * @result NaN
 */
-void dict_free(
+void dict_destroy(
 	  t_dict * dict
 	, void (*f_free)(void * data)
 );

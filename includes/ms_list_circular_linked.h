@@ -30,7 +30,7 @@ t_list_c * list_c_node(
 	, size_t size
 );
 
-/*! Circular Linked List free
+/*! Circular Linked List destroy
  *
  * @brief Dealloc an circular linked list
  *
@@ -44,7 +44,7 @@ t_list_c * list_c_node(
  *
  * @result NaN.
 */
-void list_c_free(
+void list_c_destroy(
 	  t_list_c ** list
 	, void (*f_free)(void * data)
 );

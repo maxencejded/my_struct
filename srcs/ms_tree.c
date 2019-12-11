@@ -37,7 +37,7 @@ t_tree * tree_leef(
 	return (tree);
 }
 
-void tree_free(
+void tree_destroy(
 	  t_tree ** tree
 	, void (*f_free)(void * data)
 ) {
@@ -45,8 +45,8 @@ void tree_free(
 		   MS_ADDRCK(tree)
 		&& MS_ADDRCK(*tree)
 	) {
-		tree_free(&((*tree)->left), f_free);
-		tree_free(&((*tree)->right), f_free);
+		tree_destroy(&((*tree)->left), f_free);
+		tree_destroy(&((*tree)->right), f_free);
 		if (MS_ADDRCK(f_free)) {
 			f_free((*tree)->data);
 		}

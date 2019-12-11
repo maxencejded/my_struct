@@ -30,7 +30,7 @@ t_list_s * list_s_node(
 	, size_t size
 );
 
-/*! Singly-linked List free
+/*! Singly-linked List destroy
  *
  * @brief Dealloc an singly-linked list
  *
@@ -44,7 +44,7 @@ t_list_s * list_s_node(
  *
  * @result NaN.
 */
-void list_s_free(
+void list_s_destroy(
 	  t_list_s ** list
 	, void (*f_free)(void *data)
 );

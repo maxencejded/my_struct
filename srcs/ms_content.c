@@ -13,19 +13,32 @@ t_content * content_init(
 	if (MS_ADDRCK(content)) {
 		if (0 == size) {
 			content->data = data;
+			content->next = NULL;
 		} else {
 			copy = MS_ALLOC(size);
 			if (MS_ADDRCK(copy)) {
 				MS_MEMCPY(copy, data, size);
 				content->data = copy;
+				content->next = NULL;
 			} else {
 				MS_DEALLOC(content);
-				return (NULL);
+				content = NULL;
 			}
 		}
-		content->next = NULL;
 	}
 	return (content);
+}
+
+void content_destroy(
+	  t_content * content
+	, void (*f_free)(void * data)
+) {
+	if (MS_ADDRCK(content)) {
+		if (MS_ADDRCK(f_free)) {
+			f_free(content->data);
+		}
+		MS_DEALLOC(content);
+	}
 }
 
 /* EOF */

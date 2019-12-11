@@ -25,7 +25,7 @@ typedef struct s_queue t_queue;
 */
 int queue_init(t_queue ** queue);
 
-/*! Queue free
+/*! Queue destroy
  *
  * @brief Dealloc a queue
  *
@@ -39,7 +39,7 @@ int queue_init(t_queue ** queue);
  *
  * @result NaN
 */
-void queue_free(
+void queue_destroy(
 	  t_queue * queue
 	, void (*f_free)(void * data)
 );

@@ -21,7 +21,7 @@ int stack_init(t_stack ** stack)
 	return (1);
 }
 
-void stack_free(
+void stack_destroy(
 	  t_stack * stack
 	, void (*f_free)(void * data)
 ) {
@@ -32,10 +32,10 @@ void stack_free(
 		{
 			content = stack->content;
 			stack->content = stack->content->next;
-			if (MS_ADDRCK(f_free)) {
-				f_free(content->data);
-			}
-			MS_DEALLOC(content);
+			content_destroy(
+				  content
+				, f_free
+			);
 		}		
 		MS_DEALLOC(stack);
 	}

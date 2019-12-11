@@ -30,7 +30,7 @@ t_tree * tree_leef(
 	, size_t size
 );
 
-/*! Tree free
+/*! Tree destroy
  *
  * @brief Dealloc a tree
  *
@@ -44,7 +44,7 @@ t_tree * tree_leef(
  *
  * @result NaN.
 */
-void tree_free(
+void tree_destroy(
 	  t_tree ** tree
 	, void (*f_free)(void * data)
 );

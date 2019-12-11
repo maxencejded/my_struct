@@ -77,7 +77,7 @@ int unit_list_singly(void)
 		printf("\n%s: %d - ", __FILE__, __LINE__);
 		return (FAILURE);
 	}
-	list_s_free(&list, NULL);
+	list_s_destroy(&list, NULL);
 	ret = list_s_is_empty(list);
 	if (0 == ret) {
 		printf("\n%s: %d - ", __FILE__, __LINE__);
@@ -155,7 +155,7 @@ int unit_list_doubly(void)
 		printf("\n%s: %d - ", __FILE__, __LINE__);
 		return (FAILURE);
 	}
-	list_d_free(&list, NULL);
+	list_d_destroy(&list, NULL);
 	ret = list_d_is_empty(list);
 	if (0 == ret) {
 		printf("\n%s: %d - ", __FILE__, __LINE__);
@@ -295,7 +295,7 @@ int unit_stack(void)
 		printf("\n%s: %d - ", __FILE__, __LINE__);
 		return (FAILURE);
 	}
-	stack_free(stack, NULL);
+	stack_destroy(stack, NULL);
 	return (SUCCESS);
 }
 
@@ -354,7 +354,7 @@ int unit_queue(void)
 		printf("\n%s: %d - ", __FILE__, __LINE__);
 		return (FAILURE);
 	}
-	queue_free(queue, NULL);
+	queue_destroy(queue, NULL);
 	return (SUCCESS);
 }
 
@@ -425,7 +425,7 @@ int unit_dictionary(void)
 		printf("\n%s: %d => %s != %s - ", __FILE__, __LINE__, tmp, "Potato");
 		return (FAILURE);
 	}
-	dict_free(dict, NULL);
+	dict_destroy(dict, NULL);
 	return (SUCCESS);
 }
 
@@ -487,7 +487,7 @@ int unit_tree(void)
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 		return (FAILURE);
 	}
-	tree_free(&tree, NULL);
+	tree_destroy(&tree, NULL);
 	ret = tree_is_empty(tree);
 	if (0 == ret) {
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
@@ -536,7 +536,7 @@ int unit_tree_rb(void)
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);
 		return (FAILURE);
 	}
-	tree_rb_free(&tree, NULL);
+	tree_rb_destroy(&tree, NULL);
 	ret = tree_rb_is_empty(tree);
 	if (0 == ret) {
 		printf("\n%s: %d => MALLOC - ", __FILE__, __LINE__);

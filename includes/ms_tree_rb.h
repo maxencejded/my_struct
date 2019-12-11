@@ -30,7 +30,7 @@ t_tree_rb * tree_rb_leef(
 	, size_t size
 );
 
-/*! Red Black Tree free
+/*! Red Black Tree destroy
  *
  * @brief Dealloc a tree
  *
@@ -44,7 +44,7 @@ t_tree_rb * tree_rb_leef(
  *
  * @result NaN.
 */
-void tree_rb_free(
+void tree_rb_destroy(
 	  t_tree_rb ** tree
 	, void (*f_free)(void * data)
 );

@@ -22,7 +22,7 @@ int queue_init(t_queue ** queue)
 	return (1);
 }
 
-void queue_free(
+void queue_destroy(
 	  t_queue * queue
 	, void (*f_free)(void * data)
 ) {
@@ -33,10 +33,10 @@ void queue_free(
 		{
 			content = queue->first;
 			queue->first = queue->first->next;
-			if (MS_ADDRCK(f_free)) {
-				f_free(content->data);
-			}
-			MS_DEALLOC(content);
+			content_destroy(
+				  content
+				, f_free
+			);
 		}		
 		MS_DEALLOC(queue);
 	}

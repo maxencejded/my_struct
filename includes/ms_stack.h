@@ -25,7 +25,7 @@ typedef struct s_stack t_stack;
 */
 int stack_init(t_stack ** stack);
 
-/*! Stack free
+/*! Stack destroy
  *
  * @brief Dealloc a stack
  *
@@ -39,7 +39,7 @@ int stack_init(t_stack ** stack);
  *
  * @result NaN.
 */
-void stack_free(
+void stack_destroy(
 	  t_stack * stack
 	, void (*f_free)(void * data)
 );

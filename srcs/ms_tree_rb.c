@@ -42,7 +42,7 @@ t_tree_rb * tree_rb_leef(
 	return (tree);
 }
 
-void tree_rb_free(
+void tree_rb_destroy(
 	  t_tree_rb ** tree
 	, void (*f_free)(void * data)
 ) {
@@ -50,8 +50,8 @@ void tree_rb_free(
 		   MS_ADDRCK(tree)
 		&& MS_ADDRCK(*tree)
 	) {
-		tree_rb_free(&(*tree)->left, f_free);
-		tree_rb_free(&(*tree)->right, f_free);
+		tree_rb_destroy(&(*tree)->left, f_free);
+		tree_rb_destroy(&(*tree)->right, f_free);
 		if (MS_ADDRCK(f_free)) {
 			f_free((*tree)->data);
 		}
