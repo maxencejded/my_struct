@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <strings.h>
 
-#include <ms_list_singly_linked.h>
-#include <ms_list_doubly_linked.h>
-#include <ms_list_circular_linked.h>
+#include <ms_list/ms_singly_linked.h>
+#include <ms_list/ms_doubly_linked.h>
+#include <ms_list/ms_circular_linked.h>
 #include <ms_stack.h>
 #include <ms_queue.h>
 #include <ms_dict.h>
 #include <ms_hash.h>
-#include <ms_tree.h>
-#include <ms_tree_rb.h>
+#include <ms_tree/ms_binary.h>
+#include <ms_tree/ms_red_black.h>
 
 # define SUCCESS 0
 # define FAILURE 1
