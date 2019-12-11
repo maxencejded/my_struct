@@ -10,6 +10,7 @@ All the types of datastructre in this repo:
 * [Queue](https://en.wikipedia.org/wiki/Queue_(abstract_data_type)) - Queue
 * [Dictionary](https://en.wikipedia.org/wiki/Hash_table) - Hash Table
 * [Binary Tree](http://en.wikipedia.org/wiki/Binary_search_tree) - Binary Tree
+* [Red Black Tree](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree) - Red Black Tree
 
 ## Complexity
 
@@ -22,6 +23,7 @@ All the types of datastructre in this repo:
 | Queue |  `Θ(n)` | `Θ(n)` | `Θ(1)` | `Θ(1)` |
 | Hash Table | `NaN` | `Θ(1)` (`Θ(n)`) | `Θ(1)` (`Θ(n)`) | `Θ(1)` (`Θ(n)`) |
 | Binary Tree | `Θ(log(n))` (`Θ(n)`) | `Θ(log(n))` (`Θ(n)`) | `Θ(log(n))` (`Θ(n)`) | `Θ(log(n))` (`Θ(n)`) |
+| Red Black Tree | `Θ(log(n))` | `Θ(log(n))` | `Θ(log(n))` | `Θ(log(n))` |
 
 Legende
 ```
