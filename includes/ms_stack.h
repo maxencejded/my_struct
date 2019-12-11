@@ -90,7 +90,7 @@ int stack_push(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void *stack_pop(t_stack * stack);
+void * stack_pop(t_stack * stack);
 
 #endif /* !MS_STACK_H */
 

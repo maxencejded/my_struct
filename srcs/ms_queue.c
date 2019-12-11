@@ -79,7 +79,7 @@ int queue_enqueue(
 	return (1);
 }
 
-void *queue_dequeue(t_queue * queue)
+void * queue_dequeue(t_queue * queue)
 {
 	void      * data;
 	t_content * content;
@@ -99,7 +99,7 @@ void *queue_dequeue(t_queue * queue)
 	return (NULL);
 }
 
-void *queue_peek(t_queue * queue)
+void * queue_peek(t_queue * queue)
 {
 	if (MS_ADDRCK(queue)) {
 		if (MS_ADDRCK(queue->first)) {

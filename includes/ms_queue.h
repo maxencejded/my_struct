@@ -90,7 +90,7 @@ int queue_enqueue(
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void *queue_dequeue(t_queue * queue);
+void * queue_dequeue(t_queue * queue);
 
 /*! Queue peek
  *
@@ -102,7 +102,7 @@ void *queue_dequeue(t_queue * queue);
  * @result If successful, the data is returned.
  *         Otherwise, NULL is returned.
 */
-void *queue_peek(t_queue * queue);
+void * queue_peek(t_queue * queue);
 
 #endif /* !MS_QUEUE_H */
 
